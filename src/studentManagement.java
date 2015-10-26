@@ -24,8 +24,8 @@ public class studentManagement extends JFrame implements ActionListener{
 
 		////////////////////////////////////
 		//UI 관련 변수 개수
-		Panel IDpanel, NamePanel, DeptPanel, PhonePanel;
-		Label stID, stName, stDept, stPhone, stID2, stID3,newPhone, stID4;
+		Panel IDpanel, NamePanel, DeptPanel, PhonePanel, IDpanel2;
+		Label stID, stName, stDept, stPhone, stID2, stID3,newPhone, stID4, inform;
 		TextField valID, valName, valDept, valPhone,valID2, valID3, valNewPhone, valID4;
 		Button insertInfo,search,deleteBtn, search2,updateBtn, search3;
 
@@ -61,16 +61,25 @@ public class studentManagement extends JFrame implements ActionListener{
 
 		insertInfo = new Button("ADD");
 		addStudent.add(insertInfo);
+
 		////////////////////////////////////
-		
+
+		deleteStudent.setLayout(new BorderLayout(5, 5));
+		IDpanel2 = new Panel();
 		stID2 = new Label("Student ID");
 		valID2 = new TextField(20);
 		search = new Button("SEARCH");
+		IDpanel2.add(stID2);
+		IDpanel2.add(valID2);
+		IDpanel2.add(search);
+		
+		inform = new Label("검색결과입니다");	//검색결과가 나오는 부분
+
 		deleteBtn = new Button("DELETE");
-		deleteStudent.add(stID2);
-		deleteStudent.add(valID2);
-		deleteStudent.add(search);
-		deleteStudent.add(deleteBtn);
+		deleteBtn.setSize(300,10);
+		deleteStudent.add(IDpanel2,BorderLayout.NORTH);
+		deleteStudent.add(inform, BorderLayout.CENTER);
+		deleteStudent.add(deleteBtn, BorderLayout.SOUTH);
 		/////////////////////////////////////////
 
 		stID3 = new Label("Student ID");
@@ -97,9 +106,9 @@ public class studentManagement extends JFrame implements ActionListener{
 		
 		////////////////////////////////////////////////
 	
-         addStudent.setBackground(Color.pink);
+         addStudent.setBackground(Color.white);
          deleteStudent.setBackground(Color.pink);
-         updateStudent.setBackground(Color.pink);
+         updateStudent.setBackground(Color.white);
 		 viewStudent.setBackground(Color.pink);
 
          tabpane.addTab("Add New Student", addStudent);
