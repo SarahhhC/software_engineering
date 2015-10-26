@@ -24,8 +24,8 @@ public class studentManagement extends JFrame implements ActionListener{
 
 		////////////////////////////////////
 		//UI 관련 변수 개수
-		Panel IDpanel, NamePanel, DeptPanel, PhonePanel, IDpanel2;
-		Label stID, stName, stDept, stPhone, stID2, stID3,newPhone, stID4, inform;
+		Panel IDpanel, NamePanel, DeptPanel, PhonePanel, IDpanel2, IDpanel3, phonePanel2;
+		Label stID, stName, stDept, stPhone, stID2, stID3,newPhone, stID4, inform, inform2;
 		TextField valID, valName, valDept, valPhone,valID2, valID3, valNewPhone, valID4;
 		Button insertInfo,search,deleteBtn, search2,updateBtn, search3;
 
@@ -54,6 +54,7 @@ public class studentManagement extends JFrame implements ActionListener{
 		PhonePanel.add(stPhone);
 		PhonePanel.add(valPhone);
 
+		addStudent.setLayout(new GridLayout(5,1));
 		addStudent.add(IDpanel);
 		addStudent.add(NamePanel);
 		addStudent.add(DeptPanel);
@@ -80,20 +81,32 @@ public class studentManagement extends JFrame implements ActionListener{
 		deleteStudent.add(IDpanel2,BorderLayout.NORTH);
 		deleteStudent.add(inform, BorderLayout.CENTER);
 		deleteStudent.add(deleteBtn, BorderLayout.SOUTH);
+		
 		/////////////////////////////////////////
+		updateStudent.setLayout(new BorderLayout(5, 5));
+		IDpanel3 = new Panel();
 
 		stID3 = new Label("Student ID");
 		valID3 = new TextField(20);
 		search2 = new Button("SEARCH");
+		IDpanel3.add(stID3);
+		IDpanel3.add(valID3);
+		IDpanel3.add(search2);
+
+		inform2 = new Label("검색결과입니다");	//검색결과가 나오는 부분
+
+		phonePanel2 = new Panel();
+
 		newPhone = new Label("New Phone Number");
 		valNewPhone = new TextField(20);
 		updateBtn = new Button("UPDATE");
-		updateStudent.add(stID3);
-		updateStudent.add(valID3);
-		updateStudent.add(search2);
-		updateStudent.add(newPhone);
-		updateStudent.add(valNewPhone);
-		updateStudent.add(updateBtn);
+		phonePanel2.add(newPhone);
+		phonePanel2.add(valNewPhone);
+		phonePanel2.add(updateBtn);
+		
+		updateStudent.add(IDpanel3,BorderLayout.NORTH);
+		updateStudent.add(inform2,BorderLayout.CENTER);
+		updateStudent.add(phonePanel2,BorderLayout.SOUTH);
 
 		////////////////////////////////////////
 
