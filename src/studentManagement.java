@@ -134,6 +134,8 @@ public class studentManagement extends JFrame implements ActionListener{
          setDefaultCloseOperation(EXIT_ON_CLOSE);
          setSize(700,400);
          setVisible(true);
+         //check db connected and toast message
+         dbconnectionCheck(); 
 	}
 
 	@Override
@@ -180,6 +182,6 @@ public class studentManagement extends JFrame implements ActionListener{
 
 	public static void main(String args[]) {
 		studentManagement test = new studentManagement();
-
+		
 	}
 }
