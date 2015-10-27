@@ -13,6 +13,8 @@ public class studentManagement extends JFrame implements ActionListener{
 	Statement  stat;
 
 	JTabbedPane tabpane; //Create the tab
+	
+	TextField valID, valID2, valID3, valID4;
 
 	public studentManagement(){
 		super("Student Management Program");
@@ -27,7 +29,7 @@ public class studentManagement extends JFrame implements ActionListener{
 		//UI ���� ���� ����
 		Panel IDpanel, NamePanel, DeptPanel, PhonePanel, IDpanel2, IDpanel3, phonePanel2;
 		Label stID, stName, stDept, stPhone, stID2, stID3,newPhone, stID4, inform, inform2;
-		TextField valID, valName, valDept, valPhone,valID2, valID3, valNewPhone, valID4;
+		TextField valName, valDept, valPhone, valNewPhone;
 		Button insertInfo,search,deleteBtn, search2,updateBtn, search3;
 
 		//UI Components Creation
@@ -160,6 +162,26 @@ public class studentManagement extends JFrame implements ActionListener{
 		} catch (Exception e) {
 			e.printStackTrace(System.out);
 		}
+	}
+	
+	boolean studentIdExist(){
+		
+		String IdExistSql = "IF EXIST(SELECT * FROM student WHERE id=?) return true; else return false";
+		int n=0;
+		try{
+			PreparedStatement p = conn.prepareStatement(IdExistSql);
+			p.setString(1, valID3.toString());
+			
+			if(p.execute()){
+				n=1;
+			}
+			else
+				n=0;
+		} catch (Exception e) {
+			e.printStackTrace(System.out);
+		}
+		if(n==1) return true;
+		else return false;
 	}
 	
 	void addStudentInfo(){
