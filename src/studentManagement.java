@@ -13,13 +13,13 @@ public class studentManagement extends JFrame implements ActionListener{
 	Statement  stat;
 
 	JTabbedPane tabpane; //Create the tab
-	
+
 	TextField valID, valID2, valID3, valID4;
 
 	public studentManagement(){
 		super("Student Management Program");
 		tabpane = new JTabbedPane();
-		
+
 		JPanel addStudent = new JPanel();
 		JPanel deleteStudent = new JPanel();
 		JPanel updateStudent = new JPanel();
@@ -46,7 +46,7 @@ public class studentManagement extends JFrame implements ActionListener{
 		valName = new TextField(20);
 		valDept = new TextField(20);
 		valPhone = new TextField(20);
- 
+
 		//������ ���۳�Ʈ �߰�
 		IDpanel.add(stID);
 		IDpanel.add(valID);
@@ -76,7 +76,7 @@ public class studentManagement extends JFrame implements ActionListener{
 		IDpanel2.add(stID2);
 		IDpanel2.add(valID2);
 		IDpanel2.add(search);
-		
+
 		inform = new Label("�˻�����Դϴ�");	//�˻������ ������ �κ�
 
 		deleteBtn = new Button("DELETE");
@@ -84,7 +84,7 @@ public class studentManagement extends JFrame implements ActionListener{
 		deleteStudent.add(IDpanel2,BorderLayout.NORTH);
 		deleteStudent.add(inform, BorderLayout.CENTER);
 		deleteStudent.add(deleteBtn, BorderLayout.SOUTH);
-		
+
 		/////////////////////////////////////////
 		updateStudent.setLayout(new BorderLayout(5, 5));
 		IDpanel3 = new Panel();
@@ -106,7 +106,7 @@ public class studentManagement extends JFrame implements ActionListener{
 		phonePanel2.add(newPhone);
 		phonePanel2.add(valNewPhone);
 		phonePanel2.add(updateBtn);
-		
+
 		updateStudent.add(IDpanel3,BorderLayout.NORTH);
 		updateStudent.add(inform2,BorderLayout.CENTER);
 		updateStudent.add(phonePanel2,BorderLayout.SOUTH);
@@ -119,23 +119,25 @@ public class studentManagement extends JFrame implements ActionListener{
 		viewStudent.add(stID4);
 		viewStudent.add(valID4);
 		viewStudent.add(search3);
-		
+
 		////////////////////////////////////////////////
-	
-         addStudent.setBackground(Color.white);
-         deleteStudent.setBackground(Color.pink);
-         updateStudent.setBackground(Color.white);
-		 viewStudent.setBackground(Color.pink);
 
-         tabpane.addTab("Add New Student", addStudent);
-         tabpane.addTab("Delete Student", deleteStudent);
-         tabpane.addTab("Update Student's Phone Number", updateStudent);
-         tabpane.addTab("View Student's Information", viewStudent);
+		addStudent.setBackground(Color.white);
+		deleteStudent.setBackground(Color.pink);
+		updateStudent.setBackground(Color.white);
+		viewStudent.setBackground(Color.pink);
 
-         getContentPane().add(tabpane, BorderLayout.CENTER);
-         setDefaultCloseOperation(EXIT_ON_CLOSE);
-         setSize(700,400);
-         setVisible(true);
+		tabpane.addTab("Add New Student", addStudent);
+		tabpane.addTab("Delete Student", deleteStudent);
+		tabpane.addTab("Update Student's Phone Number", updateStudent);
+		tabpane.addTab("View Student's Information", viewStudent);
+
+		getContentPane().add(tabpane, BorderLayout.CENTER);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setSize(700,400);
+		setVisible(true);
+		//check db connected and toast message
+		dbconnectionCheck(); 
 	}
 
 	@Override
@@ -144,12 +146,12 @@ public class studentManagement extends JFrame implements ActionListener{
 		System.out.println("ACtion!!");
 	}
 	public void initialize(){
-		
+
 	}
 	void dbconnectionCheck(){
 		//DB Connection check
 		try {
-			 //JDBC Driver -> DriverManager
+			//JDBC Driver -> DriverManager
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			String url = "jdbc:mysql://127.0.0.1:3306/sook?";
 
@@ -163,38 +165,44 @@ public class studentManagement extends JFrame implements ActionListener{
 			e.printStackTrace(System.out);
 		}
 	}
-	
-	boolean studentIdExist(){
+
+	boolean studentIdExist(String id){
+
+		String IdExistSql = "IF EXIST(SELECT * FROM student WHERE id=?) return true;"
+				+ " ELSE return false";
+		boolean idExist = false;
 		
-		String IdExistSql = "IF EXIST(SELECT * FROM student WHERE id=?) return true; else return false";
-		int n=0;
-		try{
+		try {
 			PreparedStatement p = conn.prepareStatement(IdExistSql);
-			p.setString(1, valID3.toString());
-			
-			if(p.execute()){
-				n=1;
-			}
-			else
-				n=0;
+			p.setString(1, id);
+			idExist = p.execute();
 		} catch (Exception e) {
 			e.printStackTrace(System.out);
 		}
-		if(n==1) return true;
-		else return false;
+		
+		if(idExist){
+			return true;
+		}
+		else
+			return false;
 	}
-	
+
 	void addStudentInfo(){
 
 		System.out.println("this the test");
-		
-		
+
+
 	}
 	void deleteStudentById(){
 		System.out.println("this the test");
 	}
 	void viewStudentById(){
-		System.out.println("this the test");
+		if(studentIdExist(valID3.toString())){
+			//jtable use
+		}
+		else{
+			//id not existing
+		}
 	}
 	void updateStudentById(){
 		System.out.println("this the test");
