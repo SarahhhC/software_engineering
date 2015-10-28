@@ -1,6 +1,5 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
-
 import java.awt.event.ActionListener;
 
 import java.sql.*;
@@ -23,10 +22,13 @@ public class studentManagement extends JFrame implements ActionListener{
 	Button insertInfo,search,deleteBtn, search2,updateBtn, viewBtn;
 	TextField valID, valID2, valID3, valID4, valName, valDept, valPhone, valNewPhone;
 
+
+	JPanel addStudent;
+
 	String index[] = {"ID","NAME","DEPARTMENT","PHONE"}; //table index create
 	DefaultTableModel listmodel = new DefaultTableModel(index,0); //create table model
 	JTable studentList = new JTable(listmodel); //view table create
-
+	
 	TextField inform, inform2;
 
 	public studentManagement(){
@@ -34,7 +36,7 @@ public class studentManagement extends JFrame implements ActionListener{
 		super("Student Management Program");
 		tabpane = new JTabbedPane();
 
-		JPanel addStudent = new JPanel();
+		addStudent = new JPanel();
 		JPanel deleteStudent = new JPanel();
 		JPanel updateStudent = new JPanel();
 		JPanel viewStudent = new JPanel();
@@ -51,7 +53,7 @@ public class studentManagement extends JFrame implements ActionListener{
 		NamePanel = new Panel();
 		DeptPanel = new Panel();
 		PhonePanel = new Panel();
-
+		
 		stID = new Label("Student ID");
 		stName = new Label("Name");
 		stDept = new Label("Department");
@@ -203,7 +205,7 @@ public class studentManagement extends JFrame implements ActionListener{
 			String url = "jdbc:mysql://127.0.0.1:3306/sook?";
 
 			//get Connection from Driver
-			conn = DriverManager.getConnection(url, "root", "root");
+			conn = DriverManager.getConnection(url, "root", "apmsetup");
 			//get Statement from Connection Object
 			stat = conn.createStatement();
 			initialize();
@@ -226,7 +228,8 @@ public class studentManagement extends JFrame implements ActionListener{
 			//데이터베이스에 동일한 사용자ID가 있는지 확인
 			ResultSet rs2=stat.executeQuery("select id from student where id="+id);
 			if(rs2.next()) { 	
-				//textarea이름.setText("이미 등록되어있는 학생 ID 입니다.");
+				//valID.setText(id);
+				JOptionPane.showConfirmDialog(addStudent, "id", "Title", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null);
 			}
 
 			String sql = "insert into student values(?,?,?,?)";
@@ -239,7 +242,6 @@ public class studentManagement extends JFrame implements ActionListener{
 			stat.executeUpdate();
 			//clear();
 			System.out.println("student data insert success");
-
 		}catch(Exception ex){
 
 		}
@@ -288,18 +290,30 @@ public class studentManagement extends JFrame implements ActionListener{
 				info[1] = resultset.getString("name");
 				info[2] = resultset.getString("department");
 				info[3] = resultset.getString("phone");
+<<<<<<< HEAD
 
 				model.addRow(info);
 
+=======
+				
+				model.addRow(info);
+				
+>>>>>>> ec30ec913103642187324f8b68468dbacc041acc
 			}
 		}catch(Exception e1){
 
 		}	
 
-	}
+}
 
+
+<<<<<<< HEAD
 	void searchId(String id,TextField t,String message){
 
+=======
+void searchId(String id,TextField t,String message){
+		
+>>>>>>> ec30ec913103642187324f8b68468dbacc041acc
 		try {
 			String sql = "select name from student where id=' " + id + " ' ";
 			PreparedStatement p = conn.prepareStatement(sql);
@@ -316,6 +330,7 @@ public class studentManagement extends JFrame implements ActionListener{
 		}	
 
 	}
+
 
 	void updateStudentById(String id,String phone){
 		try{
