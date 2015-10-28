@@ -1,6 +1,5 @@
 
 import java.awt.*;
-import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
@@ -11,9 +10,11 @@ public class studentManagement extends JFrame implements ActionListener{
 	//db Connect
 	Connection conn;
 	Statement  stat;
-
+	ResultSet rs = null;
+	TextField valID, valName, valDept, valPhone,valID2, valID3, valNewPhone, valID4;
 	JTabbedPane tabpane; //Create the tab
-
+	Button insertInfo,search,deleteBtn, search2,updateBtn, search3;
+	
 	public studentManagement(){
 		super("Student Management Program");
 		tabpane = new JTabbedPane();
@@ -27,8 +28,7 @@ public class studentManagement extends JFrame implements ActionListener{
 		//UI ���� ���� ����
 		Panel IDpanel, NamePanel, DeptPanel, PhonePanel, IDpanel2, IDpanel3, phonePanel2;
 		Label stID, stName, stDept, stPhone, stID2, stID3,newPhone, stID4, inform, inform2;
-		TextField valID, valName, valDept, valPhone,valID2, valID3, valNewPhone, valID4;
-		Button insertInfo,search,deleteBtn, search2,updateBtn, search3;
+		
 
 		//UI Components Creation
 		IDpanel = new Panel();
@@ -40,6 +40,7 @@ public class studentManagement extends JFrame implements ActionListener{
 		stName = new Label("Name");
 		stDept = new Label("Department");
 		stPhone = new Label("Phone number");
+		//insert value here
 		valID = new TextField(20);
 		valName = new TextField(20);
 		valDept = new TextField(20);
@@ -63,12 +64,14 @@ public class studentManagement extends JFrame implements ActionListener{
 
 		insertInfo = new Button("ADD");
 		addStudent.add(insertInfo);
+		insertInfo.addActionListener(this);
 
 		////////////////////////////////////
 
 		deleteStudent.setLayout(new BorderLayout(5, 5));
 		IDpanel2 = new Panel();
 		stID2 = new Label("Student ID");
+		//put data here to delete
 		valID2 = new TextField(20);
 		search = new Button("SEARCH");
 		IDpanel2.add(stID2);
@@ -76,8 +79,11 @@ public class studentManagement extends JFrame implements ActionListener{
 		IDpanel2.add(search);
 		
 		inform = new Label("�˻�����Դϴ�");	//�˻������ ������ �κ�
-
+		
 		deleteBtn = new Button("DELETE");
+		//deleteBtn actionlistener
+		deleteBtn.addActionListener(this);
+		
 		deleteBtn.setSize(300,10);
 		deleteStudent.add(IDpanel2,BorderLayout.NORTH);
 		deleteStudent.add(inform, BorderLayout.CENTER);
@@ -137,12 +143,18 @@ public class studentManagement extends JFrame implements ActionListener{
          //check db connected and toast message
          dbconnectionCheck(); 
 	}
-
+	
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		//Event Perform
-		System.out.println("ACtion!!");
-	}
+	   public void actionPerformed(ActionEvent e) {
+	      //Event Perform
+	      if(e.getSource() == insertInfo){
+	    	  addStudentInfo();
+	      }else if(e.getSource()== deleteBtn){
+	    	  deleteStudentById();
+	      }
+	   }
+	
+	
 	public void initialize(){
 		
 	}
@@ -163,18 +175,82 @@ public class studentManagement extends JFrame implements ActionListener{
 			e.printStackTrace(System.out);
 		}
 	}
-	
-	void addStudentInfo(){
+	boolean studentIdExist(String id){
 
-		System.out.println("this the test");
+		String IdExistSql = "IF EXIST(SELECT * FROM student WHERE id=?) return true;"
+				+ " ELSE return false";
+		boolean idExist = false;
 		
+		try {
+			PreparedStatement p = conn.prepareStatement(IdExistSql);
+			p.setString(1, id);
+			idExist = p.execute();
+		} catch (Exception e) {
+			e.printStackTrace(System.out);
+		}
 		
+		if(idExist){
+			return true;
+		}
+		else
+			return false;
+	}
+	void addStudentInfo(){
+			try{
+				String id = valID.getText().trim();
+				String name = valName.getText().trim();
+				String department = valDept.getText().trim();
+				String phone = valPhone.getText().trim();
+				if( id == null || name == null || department == null || valPhone == null ||
+					id.length() == 0 || name.length() == 0 ||department.length() == 0 || phone.length() == 0)
+					return ;
+				//데이터베이스에 동일한 사용자ID가 있는지 확인
+				ResultSet rs2=stat.executeQuery("select id from student where id="+id);
+				if(rs2.next()) { 	
+						//textarea이름.setText("이미 등록되어있는 학생 ID 입니다.");
+				}
+		
+				String sql = "insert into student values(?,?,?,?)";
+				//Statement의 메소드를 이용해서 SQL문의 실행
+				PreparedStatement stat=conn.prepareStatement(sql);
+				stat.setString(1, id);
+				stat.setString(2, name);
+				stat.setString(3, department );
+				stat.setString(4, phone);
+				stat.executeUpdate();
+				//clear();
+				System.out.println("student data insert success");
+			}catch(Exception ex){
+	
+				}
 	}
 	void deleteStudentById(){
-		System.out.println("this the test");
+		try{
+			String id = valID2.getText().trim();
+			//삭제할 id 잘 받아왔는지 확인 
+			//System.out.println(valID2);
+			if(id == null || id.length() == 0)
+				return ;
+			//데이터베이스에 동일한 사용자ID가 있는지 확인
+			ResultSet rs2=stat.executeQuery("select id from student where id="+id);
+			if(rs2.next()) { 	
+					//이름.setText("이미 등록되어있는 학생 ID 입니다.");
+			}
+			//data delete query
+			stat.executeUpdate("delete from student where id=' " + id + " ' ");
+				
+			System.out.println("student data delete success ");	
+		}catch(Exception e1){
+			
+		}
+		
 	}
 	void viewStudentById(){
-		System.out.println("this the test");
+		if(studentIdExist(valID3.toString())){
+			//jtable use
+		}else{
+			
+		}
 	}
 	void updateStudentById(){
 		System.out.println("this the test");
