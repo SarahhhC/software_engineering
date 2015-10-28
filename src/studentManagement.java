@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.sql.*;
 
 import javax.swing.JFrame;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
 
@@ -271,6 +272,11 @@ public class studentManagement extends JFrame implements ActionListener{
 	void viewStudentById(String id){
 
 		String info[] = new String[4];
+		info[0]= null;
+		info[1] = null;
+		info[2] =null;
+		info[3] = null;
+		DefaultTableModel model=(DefaultTableModel) studentList.getModel();
 
 		try {
 			String sql = "select * from student where id=' " + id + " ' ";
@@ -278,14 +284,13 @@ public class studentManagement extends JFrame implements ActionListener{
 			ResultSet resultset = p.executeQuery(); 
 
 			while(resultset.next()){
-
 				info[0] = resultset.getString("id");
 				info[1] = resultset.getString("name");
 				info[2] = resultset.getString("department");
 				info[3] = resultset.getString("phone");
 
-				DefaultTableModel model = (DefaultTableModel) studentList.getModel();
 				model.addRow(info);
+
 			}
 		}catch(Exception e1){
 
@@ -294,7 +299,7 @@ public class studentManagement extends JFrame implements ActionListener{
 	}
 
 	void searchId(String id,TextField t,String message){
-		
+
 		try {
 			String sql = "select name from student where id=' " + id + " ' ";
 			PreparedStatement p = conn.prepareStatement(sql);
