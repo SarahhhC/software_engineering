@@ -10,15 +10,23 @@ public class studentManagement extends JFrame implements ActionListener{
 	//db Connect
 	Connection conn;
 	Statement  stat;
+<<<<<<< HEAD
 	ResultSet rs = null;
 	TextField valID, valName, valDept, valPhone,valID2, valID3, valNewPhone, valID4;
 	JTabbedPane tabpane; //Create the tab
 	Button insertInfo,search,deleteBtn, search2,updateBtn, search3;
 	
+=======
+
+	JTabbedPane tabpane; //Create the tab
+
+	TextField valID, valID2, valID3, valID4;
+
+>>>>>>> c1a39c48090232e52a524c5c250fa606f936492e
 	public studentManagement(){
 		super("Student Management Program");
 		tabpane = new JTabbedPane();
-		
+
 		JPanel addStudent = new JPanel();
 		JPanel deleteStudent = new JPanel();
 		JPanel updateStudent = new JPanel();
@@ -28,7 +36,12 @@ public class studentManagement extends JFrame implements ActionListener{
 		//UI ���� ���� ����
 		Panel IDpanel, NamePanel, DeptPanel, PhonePanel, IDpanel2, IDpanel3, phonePanel2;
 		Label stID, stName, stDept, stPhone, stID2, stID3,newPhone, stID4, inform, inform2;
+<<<<<<< HEAD
 		
+=======
+		TextField valName, valDept, valPhone, valNewPhone;
+		Button insertInfo,search,deleteBtn, search2,updateBtn, search3;
+>>>>>>> c1a39c48090232e52a524c5c250fa606f936492e
 
 		//UI Components Creation
 		IDpanel = new Panel();
@@ -45,7 +58,7 @@ public class studentManagement extends JFrame implements ActionListener{
 		valName = new TextField(20);
 		valDept = new TextField(20);
 		valPhone = new TextField(20);
- 
+
 		//������ ���۳�Ʈ �߰�
 		IDpanel.add(stID);
 		IDpanel.add(valID);
@@ -77,7 +90,7 @@ public class studentManagement extends JFrame implements ActionListener{
 		IDpanel2.add(stID2);
 		IDpanel2.add(valID2);
 		IDpanel2.add(search);
-		
+
 		inform = new Label("�˻�����Դϴ�");	//�˻������ ������ �κ�
 		
 		deleteBtn = new Button("DELETE");
@@ -88,7 +101,7 @@ public class studentManagement extends JFrame implements ActionListener{
 		deleteStudent.add(IDpanel2,BorderLayout.NORTH);
 		deleteStudent.add(inform, BorderLayout.CENTER);
 		deleteStudent.add(deleteBtn, BorderLayout.SOUTH);
-		
+
 		/////////////////////////////////////////
 		updateStudent.setLayout(new BorderLayout(5, 5));
 		IDpanel3 = new Panel();
@@ -110,7 +123,7 @@ public class studentManagement extends JFrame implements ActionListener{
 		phonePanel2.add(newPhone);
 		phonePanel2.add(valNewPhone);
 		phonePanel2.add(updateBtn);
-		
+
 		updateStudent.add(IDpanel3,BorderLayout.NORTH);
 		updateStudent.add(inform2,BorderLayout.CENTER);
 		updateStudent.add(phonePanel2,BorderLayout.SOUTH);
@@ -123,8 +136,9 @@ public class studentManagement extends JFrame implements ActionListener{
 		viewStudent.add(stID4);
 		viewStudent.add(valID4);
 		viewStudent.add(search3);
-		
+
 		////////////////////////////////////////////////
+<<<<<<< HEAD
 	
          addStudent.setBackground(Color.white);
          deleteStudent.setBackground(Color.pink);
@@ -155,13 +169,39 @@ public class studentManagement extends JFrame implements ActionListener{
 	   }
 	
 	
+=======
+
+		addStudent.setBackground(Color.white);
+		deleteStudent.setBackground(Color.pink);
+		updateStudent.setBackground(Color.white);
+		viewStudent.setBackground(Color.pink);
+
+		tabpane.addTab("Add New Student", addStudent);
+		tabpane.addTab("Delete Student", deleteStudent);
+		tabpane.addTab("Update Student's Phone Number", updateStudent);
+		tabpane.addTab("View Student's Information", viewStudent);
+
+		getContentPane().add(tabpane, BorderLayout.CENTER);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setSize(700,400);
+		setVisible(true);
+		//check db connected and toast message
+		dbconnectionCheck();
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		//Event Perform
+		System.out.println("ACtion!!");
+	}
+>>>>>>> c1a39c48090232e52a524c5c250fa606f936492e
 	public void initialize(){
-		
+
 	}
 	void dbconnectionCheck(){
 		//DB Connection check
 		try {
-			 //JDBC Driver -> DriverManager
+			//JDBC Driver -> DriverManager
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			String url = "jdbc:mysql://127.0.0.1:3306/sook?";
 
@@ -175,6 +215,10 @@ public class studentManagement extends JFrame implements ActionListener{
 			e.printStackTrace(System.out);
 		}
 	}
+<<<<<<< HEAD
+=======
+
+>>>>>>> c1a39c48090232e52a524c5c250fa606f936492e
 	boolean studentIdExist(String id){
 
 		String IdExistSql = "IF EXIST(SELECT * FROM student WHERE id=?) return true;"
@@ -194,6 +238,16 @@ public class studentManagement extends JFrame implements ActionListener{
 		}
 		else
 			return false;
+<<<<<<< HEAD
+=======
+	}
+
+	void addStudentInfo(){
+
+		System.out.println("this the test");
+
+
+>>>>>>> c1a39c48090232e52a524c5c250fa606f936492e
 	}
 	void addStudentInfo(){
 			try{
@@ -248,8 +302,14 @@ public class studentManagement extends JFrame implements ActionListener{
 	void viewStudentById(){
 		if(studentIdExist(valID3.toString())){
 			//jtable use
+<<<<<<< HEAD
 		}else{
 			
+=======
+		}
+		else{
+			//id not existing
+>>>>>>> c1a39c48090232e52a524c5c250fa606f936492e
 		}
 	}
 	void updateStudentById(){
@@ -258,6 +318,6 @@ public class studentManagement extends JFrame implements ActionListener{
 
 	public static void main(String args[]) {
 		studentManagement test = new studentManagement();
-		
+
 	}
 }
