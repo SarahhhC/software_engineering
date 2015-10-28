@@ -25,7 +25,8 @@ public class studentManagement extends JFrame implements ActionListener{
 	JTabbedPane tabpane; //Create the tab
 	Button insertInfo,search,deleteBtn, search2,updateBtn, viewBtn;
 
-	TextField valID, valID2, valID3, valID4, valName, valDept, valPhone, valNewPhone;;
+	TextField valID, valID2, valID3, valID4, valName, valDept, valPhone, valNewPhone;
+	//JPanel addStudent;
 
 
 	public studentManagement(){
@@ -34,17 +35,10 @@ public class studentManagement extends JFrame implements ActionListener{
 
 		tabpane = new JTabbedPane();
 
-
-
 		JPanel addStudent = new JPanel();
-
 		JPanel deleteStudent = new JPanel();
-
 		JPanel updateStudent = new JPanel();
-
 		JPanel viewStudent = new JPanel();
-
-
 
 		////////////////////////////////////
 
@@ -365,6 +359,7 @@ public class studentManagement extends JFrame implements ActionListener{
 			ResultSet rs2=stat.executeQuery("select id from student where id="+id);
 			if(rs2.next()) { 	
 				//textarea이름.setText("이미 등록되어있는 학생 ID 입니다.");
+				JOptionPane.showConfirmDialog(addStudent, "id", "Title", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null);
 			}
 
 			String sql = "insert into student values(?,?,?,?)";
@@ -377,7 +372,6 @@ public class studentManagement extends JFrame implements ActionListener{
 			stat.executeUpdate();
 			//clear();
 			System.out.println("student data insert success");
-
 		}catch(Exception ex){
 
 		}
