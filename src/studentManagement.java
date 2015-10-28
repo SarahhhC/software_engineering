@@ -14,7 +14,6 @@ import javax.swing.*;
 public class studentManagement extends JFrame implements ActionListener{
 
 	//db Connect
-
 	Connection conn;
 	Statement  stat;
 
@@ -26,8 +25,8 @@ public class studentManagement extends JFrame implements ActionListener{
 	String index[] = {"ID","NAME","DEPARTMENT","PHONE"}; //table index create
 	DefaultTableModel listmodel = new DefaultTableModel(index,0); //create table model
 	JTable studentList = new JTable(listmodel); //view table create
-	
-	Label inform, inform2;
+
+	TextField inform, inform2;
 
 	public studentManagement(){
 
@@ -95,7 +94,7 @@ public class studentManagement extends JFrame implements ActionListener{
 		IDpanel2.add(valID2);
 		IDpanel2.add(search);
 
-		inform = new Label("�˻�����Դϴ�");	//�˻������ ������ �κ�
+		inform = new TextField("please search ID");	//please search ID
 
 		deleteBtn = new Button("DELETE");
 		deleteBtn.setSize(300,10);
@@ -114,7 +113,7 @@ public class studentManagement extends JFrame implements ActionListener{
 		IDpanel3.add(valID3);
 		IDpanel3.add(search2);
 
-		inform2 = new Label("�˻�����Դϴ�");	//�˻������ ������ �κ�
+		inform2 = new TextField("please search ID");	//please search ID
 		phonePanel2 = new Panel();
 		newPhone = new Label("New Phone Number");
 		valNewPhone = new TextField(20);
@@ -156,6 +155,8 @@ public class studentManagement extends JFrame implements ActionListener{
 
 		insertInfo.addActionListener(this);
 		deleteBtn.addActionListener(this);
+		search.addActionListener(this);
+		search2.addActionListener(this);
 		updateBtn.addActionListener(this);
 		viewBtn.addActionListener(this);
 
@@ -177,13 +178,15 @@ public class studentManagement extends JFrame implements ActionListener{
 		}else if(e.getSource()== deleteBtn){
 			deleteStudentById();
 		}else if(e.getSource()== viewBtn){
-			viewStudentById();
+			viewStudentById(valID4.getText().trim());
+		}else if(e.getSource()== search){
+			searchId(valID2.getText().trim(),inform," exists, you can delete!");
 		}else if(e.getSource()== search2){
-			searchId();
+			searchId(valID3.getText().trim(),inform2," exists, please update phone number!");
 		}else if(e.getSource()== updateBtn){
-			updateStudentById();
+			updateStudentById(valID3.getText().trim(),valNewPhone.getText().trim());
 		}
-		
+
 	}
 
 	public void initialize(){
@@ -265,14 +268,13 @@ public class studentManagement extends JFrame implements ActionListener{
 
 	}
 
-	void viewStudentById(){
+	void viewStudentById(String id){
 
 		String info[] = new String[4];
-		String id = valID4.getText().trim();
-		
+
 		try {
-			String ViewSql = "select * from student where id=' " + id + " ' ";
-			PreparedStatement p = conn.prepareStatement(ViewSql);
+			String sql = "select * from student where id=' " + id + " ' ";
+			PreparedStatement p = conn.prepareStatement(sql);
 			ResultSet resultset = p.executeQuery(); 
 
 			while(resultset.next()){
@@ -289,49 +291,45 @@ public class studentManagement extends JFrame implements ActionListener{
 
 		}	
 
-}
+	}
 
-void searchId(){
-	
-	String id = valID3.getText().trim();
-
-	try {
-		String ViewSql = "select name from student where id=' " + id + " ' ";
-		PreparedStatement p = conn.prepareStatement(ViewSql);
-		ResultSet resultset = p.executeQuery(); 
+	void searchId(String id,TextField t,String message){
 		
-		if(resultset != null){
-			inform2.setText("ID "+id+" exists, please update phone number!");
-		}
-		
-	}catch(Exception e1){
+		try {
+			String sql = "select name from student where id=' " + id + " ' ";
+			PreparedStatement p = conn.prepareStatement(sql);
+			ResultSet resultset = p.executeQuery(); 
+			String update = "ID "+id+" not exists";
+			while(resultset.next()){
+				if(resultset.getString("name") != null){
+					update= "ID "+ id + message;
+				}
+			}
+			t.setText(update);
+		}catch(Exception e1){
 
-	}	
-	
-}
-
-void updateStudentById(){
-	try{
-		String phone = valNewPhone.getText().trim();
-		String id = valID3.getText().trim();
-		
-		String sql = "update student set phone = ? where id='"+id+"'";
-		PreparedStatement stat=conn.prepareStatement(sql);
-		stat.setString(1, phone);
-		stat.executeUpdate();
-
-	}catch(Exception ex){
+		}	
 
 	}
 
-}
+	void updateStudentById(String id,String phone){
+		try{
 
-public static void main(String args[]) {
+			String sql = "update student set phone = ? where id='"+id+"'";
+			PreparedStatement stat=conn.prepareStatement(sql);
+			stat.setString(1, phone);
+			stat.executeUpdate();
 
-	studentManagement test = new studentManagement();
+		}catch(Exception ex){
 
+		}
 
+	}
 
-}
+	public static void main(String args[]) {
+
+		studentManagement test = new studentManagement();
+
+	}
 
 }
