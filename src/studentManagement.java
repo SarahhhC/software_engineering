@@ -137,7 +137,7 @@ public class studentManagement extends JFrame implements ActionListener{
 		setSize(700,400);
 		setVisible(true);
 		//check db connected and toast message
-		dbconnectionCheck(); 
+		dbconnectionCheck();
 	}
 
 	@Override
