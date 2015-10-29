@@ -19,7 +19,7 @@ public class studentManagement extends JFrame implements ActionListener{
 
 	ResultSet rs = null;
 	JTabbedPane tabpane; //Create the tab
-	Button insertInfo,search,deleteBtn, search2,updateBtn, viewBtn;
+	Button insertInfo,search, search2, deleteBtn, updateBtn, viewBtn;
 	TextField valID, valID2, valID3, valID4, valName, valDept, valPhone, valNewPhone;
 
 
