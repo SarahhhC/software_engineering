@@ -43,11 +43,9 @@ public class studentManagement extends JFrame implements ActionListener{
 
 		////////////////////////////////////
 
-		//UI ���� ���� ����
+		//UI Components Creation
 		Panel IDpanel, NamePanel, DeptPanel, PhonePanel, IDpanel2, IDpanel3, phonePanel2;
 		Label stID, stName, stDept, stPhone, stID2, stID3,newPhone, stID4;
-
-		//UI Components Creation
 
 		IDpanel = new Panel();
 		NamePanel = new Panel();
@@ -64,8 +62,6 @@ public class studentManagement extends JFrame implements ActionListener{
 		valName = new TextField(20);
 		valDept = new TextField(20);
 		valPhone = new TextField(20);
-
-		//������ ���۳�Ʈ �߰�
 
 		IDpanel.add(stID);
 		IDpanel.add(valID);
@@ -289,7 +285,7 @@ public class studentManagement extends JFrame implements ActionListener{
 
 				model.addRow(info);
 				if (model.getRowCount() > 1) {
-					for (int i = model.getRowCount() - 1; i > 0; i--) {
+					for (int i = model.getRowCount() - 1; i > -1; i--) {
 						model.removeRow(i);
 					}
 				}
