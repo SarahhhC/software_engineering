@@ -28,7 +28,7 @@ public class studentManagement extends JFrame implements ActionListener{
 	String index[] = {"ID","NAME","DEPARTMENT","PHONE"}; //table index create
 	DefaultTableModel listmodel = new DefaultTableModel(index,0); //create table model
 	JTable studentList = new JTable(listmodel); //view table create
-	
+
 	TextField inform, inform2;
 
 	public studentManagement(){
@@ -53,7 +53,7 @@ public class studentManagement extends JFrame implements ActionListener{
 		NamePanel = new Panel();
 		DeptPanel = new Panel();
 		PhonePanel = new Panel();
-		
+
 		stID = new Label("Student ID");
 		stName = new Label("Name");
 		stDept = new Label("Department");
@@ -274,46 +274,34 @@ public class studentManagement extends JFrame implements ActionListener{
 	void viewStudentById(String id){
 
 		String info[] = new String[4];
-		info[0]= null;
-		info[1] = null;
-		info[2] =null;
-		info[3] = null;
-		DefaultTableModel model=(DefaultTableModel) studentList.getModel();
-
+		DefaultTableModel model = (DefaultTableModel) studentList.getModel();
 		try {
 			String sql = "select * from student where id=' " + id + " ' ";
 			PreparedStatement p = conn.prepareStatement(sql);
 			ResultSet resultset = p.executeQuery(); 
 
 			while(resultset.next()){
+
 				info[0] = resultset.getString("id");
 				info[1] = resultset.getString("name");
 				info[2] = resultset.getString("department");
 				info[3] = resultset.getString("phone");
-<<<<<<< HEAD
 
 				model.addRow(info);
-
-=======
-				
-				model.addRow(info);
-				
->>>>>>> ec30ec913103642187324f8b68468dbacc041acc
+				if (model.getRowCount() > 1) {
+					for (int i = model.getRowCount() - 1; i > 0; i--) {
+						model.removeRow(i);
+					}
+				}
 			}
 		}catch(Exception e1){
 
-		}	
+		}
 
-}
+	}
 
-
-<<<<<<< HEAD
 	void searchId(String id,TextField t,String message){
 
-=======
-void searchId(String id,TextField t,String message){
-		
->>>>>>> ec30ec913103642187324f8b68468dbacc041acc
 		try {
 			String sql = "select name from student where id=' " + id + " ' ";
 			PreparedStatement p = conn.prepareStatement(sql);
