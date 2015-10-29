@@ -284,11 +284,7 @@ public class studentManagement extends JFrame implements ActionListener{
 				info[3] = resultset.getString("phone");
 
 				model.addRow(info);
-				if (model.getRowCount() > 1) {
-					for (int i = model.getRowCount() - 1; i > -1; i--) {
-						model.removeRow(i);
-					}
-				}
+				
 			}
 		}catch(Exception e1){
 
