@@ -7,7 +7,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
 
 
-
 public class studentManagement extends JFrame implements ActionListener{
 	//db Connect
 	Connection conn;
