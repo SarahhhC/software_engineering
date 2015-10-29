@@ -10,7 +10,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
 
 
-
 public class studentManagement extends JFrame implements ActionListener{
 
 	//db Connect
@@ -174,16 +173,16 @@ public class studentManagement extends JFrame implements ActionListener{
 		//Event Perform
 		if(e.getSource() == insertInfo){
 			addStudentInfo();
-		}else if(e.getSource()== deleteBtn){
-			deleteStudentById();
-		}else if(e.getSource()== viewBtn){
-			viewStudentById(valID4.getText().trim());
 		}else if(e.getSource()== search){
 			searchId(valID2.getText().trim(),inform," exists, you can delete!");
+		}else if(e.getSource()== deleteBtn){
+			deleteStudentById();
 		}else if(e.getSource()== search2){
 			searchId(valID3.getText().trim(),inform2," exists, please update phone number!");
 		}else if(e.getSource()== updateBtn){
 			updateStudentById(valID3.getText().trim(),valNewPhone.getText().trim());
+		}else if(e.getSource()== viewBtn){
+			viewStudentById(valID4.getText().trim());
 		}
 
 	}
