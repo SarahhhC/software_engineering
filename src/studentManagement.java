@@ -11,7 +11,6 @@ public class studentManagement extends JFrame implements ActionListener{
 
 	Connection conn; //DB Connection 
 	Statement  stat;
-	ResultSet rs = null;
 
 	JTabbedPane tabpane; //Create the tab
 	Button insertInfoBtn, deleteBtn, updateBtn, viewBtn;
@@ -35,7 +34,8 @@ public class studentManagement extends JFrame implements ActionListener{
 	String index[] = {"ID","NAME","DEPARTMENT","PHONE"}; //table index
 	DefaultTableModel listmodel = new DefaultTableModel(index,0); //table model
 	JTable studentList = new JTable(listmodel); //view table by model
-
+	
+	
 	public studentManagement(){
 
 		super("Student Management Program");
@@ -48,7 +48,7 @@ public class studentManagement extends JFrame implements ActionListener{
 
 
 		//UI Component
-		Panel IDpanel, NamePanel, DeptPanel, PhonePanel, IDpanel2, IDpanel3, phonePanel2;
+		Panel IDpanel, NamePanel, DeptPanel, PhonePanel, phonePanel2, IDpanel2, IDpanel3;
 		Label studentID_add, studentID_delete, studentID_update, studentID_view;
 		Label stName, stDept, stPhone, newPhone;
 
@@ -207,7 +207,7 @@ public class studentManagement extends JFrame implements ActionListener{
 			String url = "jdbc:mysql://127.0.0.1:3306/sook?";
 
 			//get Connection from Driver
-			conn = DriverManager.getConnection(url, "root", "apmsetup");
+			conn = DriverManager.getConnection(url, "root", "ampsetup");
 			//get Statement from Connection Object
 			stat = conn.createStatement();
 			System.out.println("DB Connect!!");
@@ -257,6 +257,7 @@ public class studentManagement extends JFrame implements ActionListener{
 	}
 
 	void updateStudentById(String id,String phone){
+		
 		try{
 
 			String sql = "update student set phone = ? where id='"+id+"'";
@@ -273,31 +274,26 @@ public class studentManagement extends JFrame implements ActionListener{
 	void viewStudentById(String id){
 
 		String info[] = new String[4];
-		info[0]= null;
-		info[1] = null;
-		info[2] =null;
-		info[3] = null;
 		DefaultTableModel model=(DefaultTableModel) studentList.getModel();
-
 		try {
 			String sql = "select * from student where id=' " + id + " ' ";
 			PreparedStatement p = conn.prepareStatement(sql);
 			ResultSet resultset = p.executeQuery(); 
-
 			while(resultset.next()){
-				info[0] = resultset.getString("id");
-				info[1] = resultset.getString("name");
-				info[2] = resultset.getString("department");
-				info[3] = resultset.getString("phone");
-
-				model.addRow(info);
-
+					info[0] = resultset.getString("id");
+					info[1] = resultset.getString("name");
+					info[2] = resultset.getString("department");
+					info[3] = resultset.getString("phone");
+	
+					model.addRow(info);
 			}
 			System.out.println("student data view success");
 		}catch(Exception e1){
 
 		}   
 
+		System.out.println(studentList.getValueAt(0, 0));
+		
 	}
 
 	void searchId(String id,TextField t,String message){
@@ -318,7 +314,6 @@ public class studentManagement extends JFrame implements ActionListener{
 		}catch(Exception e1){
 
 		}   
-
 	}
 
 	public static void main(String args[]) {
