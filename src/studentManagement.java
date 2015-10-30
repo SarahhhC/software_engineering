@@ -11,7 +11,6 @@ public class studentManagement extends JFrame implements ActionListener{
 
 	Connection conn; //DB Connection 
 	Statement  stat;
-	ResultSet rs = null;
 
 	JTabbedPane tabpane; //Create the tab
 	Button insertInfoBtn, deleteBtn, updateBtn, viewBtn;
@@ -273,10 +272,6 @@ public class studentManagement extends JFrame implements ActionListener{
 	void viewStudentById(String id){
 
 		String info[] = new String[4];
-		info[0]= null;
-		info[1] = null;
-		info[2] =null;
-		info[3] = null;
 		DefaultTableModel model=(DefaultTableModel) studentList.getModel();
 
 		try {
