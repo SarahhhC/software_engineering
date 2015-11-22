@@ -1,12 +1,4 @@
 import java.awt.*;
-import java.awt.TextField;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.*;
-import javax.swing.JFrame;
-import javax.swing.*;
-
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
@@ -42,6 +34,7 @@ public class studentManagement extends JFrame implements ActionListener{
    Button searchToDeleteBtn, searchToUpdateBtn;
    
    //To update password  
+   TextField searchIdToUpdatePassword;
    Button changePasswordBtn;
 
    String index[] = {"ID","NAME","DEPARTMENT","PHONE"}; //table index create
@@ -65,7 +58,7 @@ public class studentManagement extends JFrame implements ActionListener{
       
       //UI Component
       Panel LoginPanel, loginIDpanel, IDpanel, NamePanel, DeptPanel, PhonePanel, IDpanel2, IDpanel3, phonePanel2;
-      Label loginID, loginPW, stID, stName, stDept, stPhone, stID2, stID3,newPhone, stID4, password;
+      Label loginID, loginPW, stID, stName, stDept, stPhone, stID2, stID3,newPhone, stID4, password, stID5;
 
       
       
@@ -87,7 +80,7 @@ public class studentManagement extends JFrame implements ActionListener{
       LoginPanel.add(insertPWforLogin);
       LoginPanel.add(loginBtn);
       
-      showLoginRecord = new TextField("");//	if unnecessary , can be removed
+      showLoginRecord = new TextField("");//   if unnecessary , can be removed
       loginIDpanel = new Panel();
       logoutBtn = new Button("LOGOUT");
       loginIDpanel.add(logoutBtn);
@@ -197,11 +190,15 @@ public class studentManagement extends JFrame implements ActionListener{
       viewStudent.add(scroll,BorderLayout.SOUTH);
       
       /*
-       *  CHANGE PROFESSOR'S PASSWORD IN HERE BY SEARCHING EXISTING PASSWORD
+       *  CHANGE PROFESSOR'S PASSWORD IN HERE BY SEARCHING ID
         */
-      password = new Label("Please, Enter New Password");
+      stID5 = new Label("Enter Your ID");
+      TextField searchIdToUpdatePassword = new TextField(20); // search Id to Update Password 
+      password = new Label("Enter New Password");
       TextField newPassword = new TextField(20); // password to searchToDeleteBtn 
       Button changePasswordBtn = new Button("CHANGE");
+      changePassword.add(stID5);
+      changePassword.add(searchIdToUpdatePassword);
       changePassword.add(password);
       changePassword.add(newPassword);
       changePassword.add(changePasswordBtn);
@@ -231,7 +228,7 @@ public class studentManagement extends JFrame implements ActionListener{
 
       getContentPane().add(tabpane, BorderLayout.CENTER);
       setDefaultCloseOperation(EXIT_ON_CLOSE);
-      setSize(800,400);
+      setSize(1000,400);
       setVisible(true);
       
       dbconnectionCheck();  //check db connected and toast message
@@ -242,11 +239,11 @@ public class studentManagement extends JFrame implements ActionListener{
    @Override
    public void actionPerformed(ActionEvent e) {
       //Event Perform
-	  if(e.getSource() == loginBtn){
-		 loginInStudentManageProgram();
-	  }else if(e.getSource() == logoutBtn){
-		 logoutFromStudentManageProgram();
-	  }else if(e.getSource() == insertInfoBtn){
+     if(e.getSource() == loginBtn){
+       loginInStudentManageProgram();
+     }else if(e.getSource() == logoutBtn){
+       logoutFromStudentManageProgram();
+     }else if(e.getSource() == insertInfoBtn){
          addStudentInfo();
       }else if(e.getSource()== deleteBtn){
          deleteStudentById();
@@ -288,11 +285,11 @@ public class studentManagement extends JFrame implements ActionListener{
    }
 
    void loginInStudentManageProgram(){
-	   //로그인
+      //로그인
    }
    
    void logoutFromStudentManageProgram(){
-	   //로그아웃
+      //로그아웃
    }
    
    void addStudentInfo(){
@@ -399,8 +396,8 @@ void searchId(String id,TextField t,String message){
    }
    
    void updatePassword(String newpassword){
-	   
-	   //여기에 소스 추가
+      
+      //ID로 검색해서 Password 변경하기
    }
 
    public static void main(String args[]) {
