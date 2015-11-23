@@ -6,7 +6,6 @@ import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
 
-
 public class studentManagement extends JFrame implements ActionListener {
 
 	Button loginBtn;	
@@ -371,5 +370,4 @@ public class studentManagement extends JFrame implements ActionListener {
 		studentManagement test = new studentManagement();
 
 	}
-
 }
