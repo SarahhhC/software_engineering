@@ -7,162 +7,61 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
 
 
-public class studentManagement extends JFrame implements ActionListener{
+public class studentManagement extends JFrame implements ActionListener {
 
-	Connection conn; //DB Connection 
+	Button loginBtn;	
+	JTextField insertIDforLogin;
+	JPasswordField insertPWforLogin;
+	
+	Connection conn; 
 	Statement  stat;
 
-	JTabbedPane tabpane; //Create the tab
+	JTabbedPane tabpane; 
 	Button insertInfoBtn, deleteBtn, updateBtn, viewBtn;
-
-	//search id button to delete, search id button to update  
 	Button searchToDeleteBtn, searchToUpdateBtn;
-
-	//updatedPhone number
 	TextField updatedPhone;
-
-	//To insert id,name,department,phone   
 	TextField insertId, insertName, insertDepartment, insertPhone; 
-
-	//search id to delete,to update,to view
 	TextField idToDelete, idToUpdate, idToView;
-
-	//inform to delete,update
 	TextField informToDelete, informToUpdate;
 
-	//table to show student list
-	String index[] = {"ID","NAME","DEPARTMENT","PHONE"}; //table index
-	DefaultTableModel listmodel = new DefaultTableModel(index,0); //table model
-	JTable studentList = new JTable(listmodel); //view table by model
+	String index[] = {"ID","NAME","DEPARTMENT","PHONE"}; 
+	DefaultTableModel listmodel = new DefaultTableModel(index,0);
+	JTable studentList = new JTable(listmodel); 
 	
 	
-	public studentManagement(){
+	public studentManagement() throws IndexOutOfBoundsException{
 
 		super("Student Management Program");
 		tabpane = new JTabbedPane();
-
+		
+		JPanel login = new JPanel();
 		JPanel addStudent = new JPanel();
 		JPanel deleteStudent = new JPanel();
 		JPanel updateStudent = new JPanel();
 		JPanel viewStudent = new JPanel();
-
-
-		//UI Component
-		Panel IDpanel, NamePanel, DeptPanel, PhonePanel, phonePanel2, IDpanel2, IDpanel3;
-		Label studentID_add, studentID_delete, studentID_update, studentID_view;
-		Label stName, stDept, stPhone, newPhone;
-
-		//UI Components Creation
-
-		IDpanel = new Panel();
-		NamePanel = new Panel();
-		DeptPanel = new Panel();
-		PhonePanel = new Panel();
-
-		studentID_add = new Label("Student ID");
-		stName = new Label("Name");
-		stDept = new Label("Department");
-		stPhone = new Label("Phone number");
-
-		/*
-		 *  INSERT STUDENT ID,NAME,DEPARTMENT,PHONE IN HERE
-		 */
-		insertId = new TextField(20);
-		insertName = new TextField(20);
-		insertDepartment = new TextField(20);
-		insertPhone = new TextField(20);
-
-
-		IDpanel.add(studentID_add);
-		IDpanel.add(insertId);
-		NamePanel.add(stName);
-		NamePanel.add(insertName);
-		DeptPanel.add(stDept);
-		DeptPanel.add(insertDepartment);
-		PhonePanel.add(stPhone);
-		PhonePanel.add(insertPhone);
-
-		addStudent.setLayout(new GridLayout(5,1));
-		addStudent.add(IDpanel);
-		addStudent.add(NamePanel);
-		addStudent.add(DeptPanel);
-		addStudent.add(PhonePanel);
-
-		insertInfoBtn = new Button("ADD");
-		addStudent.add(insertInfoBtn);
-
-		/*
-		 *  DELETE STUDENT IN HERE BY SEARCHING ID
-		 */
-		deleteStudent.setLayout(new BorderLayout(5, 5));
-		IDpanel2 = new Panel();
-		studentID_delete = new Label("Student ID");
-
-		idToDelete = new TextField(20); //put id here to delete
-		searchToDeleteBtn = new Button("SEARCH"); 
-		IDpanel2.add(studentID_delete);
-		IDpanel2.add(idToDelete);
-		IDpanel2.add(searchToDeleteBtn);
-
-		informToDelete = new TextField("Please, Search Id to delete");   
-		deleteBtn = new Button("DELETE");
-		deleteBtn.setSize(300,10);
-		deleteStudent.add(IDpanel2,BorderLayout.NORTH);
-		deleteStudent.add(informToDelete, BorderLayout.CENTER);
-		deleteStudent.add(deleteBtn, BorderLayout.SOUTH);
-
-		/*
-		 *  UPDATE STUDENT PHONENUMBER IN HERE BY SEARCHING ID 
-		 */
-		updateStudent.setLayout(new BorderLayout(5, 5));
-		IDpanel3 = new Panel();
-		studentID_update = new Label("Student ID");
-		idToUpdate = new TextField(20); //id to update 
-		searchToUpdateBtn = new Button("SEARCH");
-		IDpanel3.add(studentID_update);
-		IDpanel3.add(idToUpdate);
-		IDpanel3.add(searchToUpdateBtn);
-
-		informToUpdate = new TextField("Please, Search Id to Update Phone Number");   
-		phonePanel2 = new Panel();
-		newPhone = new Label("New Phone Number");
-		updatedPhone = new TextField(20); //phone number to update
-		updateBtn = new Button("UPDATE");
-		phonePanel2.add(newPhone);
-		phonePanel2.add(updatedPhone);
-		phonePanel2.add(updateBtn);
-
-		updateStudent.add(IDpanel3,BorderLayout.NORTH);
-		updateStudent.add(informToUpdate,BorderLayout.CENTER);
-		updateStudent.add(phonePanel2,BorderLayout.SOUTH);
-
-		/*
-		 *  VIEW STUDENT INFORMATION IN HERE BY SEARCHING ID 
-		 */
-		JPanel searchInfo = new JPanel();
-		studentID_view = new Label("Student ID");
-		idToView = new TextField(20); // id to searchToDeleteBtn 
-		viewBtn = new Button("SEARCH");
-		searchInfo.add(studentID_view);
-		searchInfo.add(idToView);
-		searchInfo.add(viewBtn);
-
-
-		JScrollPane scroll = new JScrollPane(studentList);
-		scroll.setSize(17,20);
-		viewStudent.add(searchInfo,BorderLayout.NORTH);
-		viewStudent.add(scroll,BorderLayout.SOUTH);
-
+		
+		loginTab(login);
+		insertTab(addStudent);
+		deleteTab(deleteStudent);
+		updateTab(updateStudent);
+		viewTab(viewStudent );
+		
+		login.setBackground(Color.white);
 		addStudent.setBackground(Color.white);
 		deleteStudent.setBackground(Color.white);
 		updateStudent.setBackground(Color.white);
 		viewStudent.setBackground(Color.white);
 
-		tabpane.addTab("Add New Student", addStudent);
-		tabpane.addTab("Delete Student", deleteStudent);
-		tabpane.addTab("Update Student's Phone Number", updateStudent);
-		tabpane.addTab("View Student's Information", viewStudent);
+		tabpane.addTab("Login", login);
+		
+		//tabpane.addTab("Add New Student", addStudent);
+		//tabpane.addTab("Delete Student", deleteStudent);
+		//tabpane.addTab("Update Student's Phone Number", updateStudent);
+		//tabpane.addTab("View Student's Information", viewStudent);
+		
+		//tabpane.removeTabAt(1);
 
+		loginBtn.addActionListener(this);
 		insertInfoBtn.addActionListener(this);
 		deleteBtn.addActionListener(this);
 		searchToDeleteBtn.addActionListener(this);
@@ -175,7 +74,7 @@ public class studentManagement extends JFrame implements ActionListener{
 		setSize(700,400);
 		setVisible(true);
 
-		dbconnectionCheck();  //check db connected and toast message
+		dbconnectionCheck();  
 
 	}
 
@@ -215,7 +114,158 @@ public class studentManagement extends JFrame implements ActionListener{
 			e.printStackTrace(System.out);
 		}
 	}
+	
+	public void loginTab(JPanel login){
+		
+		Label loginID, loginPW;
+		
+		Panel loginPanel = new Panel();
+		loginPanel.setLayout(new GridLayout(2,2));
+		loginID = new Label("ID  :  ");
+		insertIDforLogin = new JTextField(20);
+		loginPW = new Label("PW  :  ");
+		insertPWforLogin = new JPasswordField(20);
+		loginPanel.add(loginID);
+		loginPanel.add(insertIDforLogin);
+		loginPanel.add(loginPW);
+		loginPanel.add(insertPWforLogin);
+	
+		login.add(loginPanel);
+	
+		loginBtn = new Button("LOGIN");
+		login.add(loginBtn);
+		
+		
+		
+	}
+	
+	void insertTab(JPanel addStudent){
+		
+		Panel IDpanel, NamePanel, DeptPanel, PhonePanel;
+		IDpanel = new Panel();
+		NamePanel = new Panel();
+		DeptPanel = new Panel();
+		PhonePanel = new Panel();
+		
+		
+		Label studentID_add,stName,stDept,stPhone;
+		
+		studentID_add = new Label("Student ID");
+		stName = new Label("Name");
+		stDept = new Label("Department");
+		stPhone = new Label("Phone number");
+		
+		/*
+		 *  INSERT STUDENT ID,NAME,DEPARTMENT,PHONE IN HERE
+		 */
+		insertId = new TextField(20);
+		insertName = new TextField(20);
+		insertDepartment = new TextField(20);
+		insertPhone = new TextField(20);
 
+
+		IDpanel.add(studentID_add);
+		IDpanel.add(insertId);
+		NamePanel.add(stName);
+		NamePanel.add(insertName);
+		DeptPanel.add(stDept);
+		DeptPanel.add(insertDepartment);
+		PhonePanel.add(stPhone);
+		PhonePanel.add(insertPhone);
+
+		addStudent.setLayout(new GridLayout(5,1));
+		addStudent.add(IDpanel);
+		addStudent.add(NamePanel);
+		addStudent.add(DeptPanel);
+		addStudent.add(PhonePanel);
+
+		insertInfoBtn = new Button("ADD");
+		addStudent.add(insertInfoBtn);
+		
+	}
+	
+	void deleteTab(JPanel deleteStudent){
+		
+		
+		Panel IDpanel2;
+		Label studentID_delete;
+		
+		/*
+		 *  DELETE STUDENT IN HERE BY SEARCHING ID
+		 */
+		deleteStudent.setLayout(new BorderLayout(5, 5));
+		IDpanel2 = new Panel();
+		studentID_delete = new Label("Student ID");
+
+		idToDelete = new TextField(20); //put id here to delete
+		searchToDeleteBtn = new Button("SEARCH"); 
+		IDpanel2.add(studentID_delete);
+		IDpanel2.add(idToDelete);
+		IDpanel2.add(searchToDeleteBtn);
+
+		informToDelete = new TextField("Please, Search Id to delete");   
+		deleteBtn = new Button("DELETE");
+		deleteBtn.setSize(300,10);
+		deleteStudent.add(IDpanel2,BorderLayout.NORTH);
+		deleteStudent.add(informToDelete, BorderLayout.CENTER);
+		deleteStudent.add(deleteBtn, BorderLayout.SOUTH);
+	}
+
+	void updateTab(JPanel updateStudent){
+		
+		
+		Panel IDpanel3;
+		Panel phonePanel2;
+		Label studentID_update,newPhone;
+		/*
+		 *  UPDATE STUDENT PHONENUMBER IN HERE BY SEARCHING ID 
+		 */
+		updateStudent.setLayout(new BorderLayout(5, 5));
+		IDpanel3 = new Panel();
+		studentID_update = new Label("Student ID");
+		idToUpdate = new TextField(20); //id to update 
+		searchToUpdateBtn = new Button("SEARCH");
+		IDpanel3.add(studentID_update);
+		IDpanel3.add(idToUpdate);
+		IDpanel3.add(searchToUpdateBtn);
+
+		informToUpdate = new TextField("Please, Search Id to Update Phone Number");   
+		phonePanel2 = new Panel();
+		newPhone = new Label("New Phone Number");
+		updatedPhone = new TextField(20); //phone number to update
+		updateBtn = new Button("UPDATE");
+		phonePanel2.add(newPhone);
+		phonePanel2.add(updatedPhone);
+		phonePanel2.add(updateBtn);
+
+		updateStudent.add(IDpanel3,BorderLayout.NORTH);
+		updateStudent.add(informToUpdate,BorderLayout.CENTER);
+		updateStudent.add(phonePanel2,BorderLayout.SOUTH);
+		
+	}
+	
+	void viewTab(JPanel viewStudent){
+
+		Label studentID_view;
+		/*
+		 *  VIEW STUDENT INFORMATION IN HERE BY SEARCHING ID 
+		 */
+		JPanel searchInfo = new JPanel();
+		studentID_view = new Label("Student ID");
+		idToView = new TextField(20); // id to searchToDeleteBtn 
+		viewBtn = new Button("SEARCH");
+		searchInfo.add(studentID_view);
+		searchInfo.add(idToView);
+		searchInfo.add(viewBtn);
+
+
+		JScrollPane scroll = new JScrollPane(studentList);
+		scroll.setSize(17,20);
+		viewStudent.add(searchInfo,BorderLayout.NORTH);
+		viewStudent.add(scroll,BorderLayout.SOUTH);
+		
+	}
+	
 	void addStudentInfo(){
 		try{
 			String id = insertId.getText().trim();
