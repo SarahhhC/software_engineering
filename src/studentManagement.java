@@ -9,19 +9,6 @@ public class studentManagement extends JFrame implements ActionListener {
 	JTabbedPane tabpane;
 	Connection dbConnection; 
 	Statement  sqlStatement;
-	Button loginButton, passwordCheckButton, logoutButton, backToMainButton, changeProfessorPasswordButton;
-	Button insertStudentInfoButton, deleteStudentInfoButton, updateStudentPhoneButton, viewStudentInfoButton;
-	Button searchStudentIdToDeleteButton, searchStudentIdToUpdateButton;
-	JPasswordField insertProfessorPassword;
-	TextField insertId, insertName, insertDepartment, insertPhone; 
-	TextField idToDelete, idToUpdate, updatedPhone, idToView;
-	TextField informToDelete, informToUpdate;
-	TextField insertedLoginID, newPassword;
-
-	String index[] = {"ID", "NAME", "DEPARTMENT", "PHONE"}; 
-	DefaultTableModel listmodel = new DefaultTableModel(index, 0);
-	JTable studentList = new JTable(listmodel); 
-
 	JPanel loginId = new JPanel();
 	JPanel loginPassword = new JPanel();
 	JPanel logout = new JPanel();
@@ -30,6 +17,33 @@ public class studentManagement extends JFrame implements ActionListener {
 	JPanel deleteStudent = new JPanel();
 	JPanel updateStudent = new JPanel();
 	JPanel viewStudent = new JPanel();
+	Button loginButton;
+	Button passwordCheckButton;
+	Button logoutButton;
+	Button backToMainButton;
+	Button insertStudentInfoButton;
+	Button searchStudentIdToDeleteButton;
+	Button deleteStudentInfoButton;
+	Button searchStudentIdToUpdateButton;
+	Button updateStudentPhoneButton;
+	Button viewStudentInfoButton;
+	Button changeProfessorPasswordButton;
+	TextField insertId;
+	TextField insertName;
+	TextField insertDepartment;
+	TextField insertPhone; 
+	TextField idToDelete;
+	TextField idToUpdate;
+	TextField updatedPhone;
+	TextField idToView;
+	TextField informToDelete;
+	TextField informToUpdate;
+	TextField insertedLoginID;
+	TextField newPassword;
+	JPasswordField insertProfessorPassword;
+	String index[] = {"ID", "NAME", "DEPARTMENT", "PHONE"}; 
+	DefaultTableModel listmodel = new DefaultTableModel(index, 0);
+	JTable studentList = new JTable(listmodel); 
 
 	public studentManagement() throws IndexOutOfBoundsException {
 		super("Student Management Program");
@@ -49,7 +63,7 @@ public class studentManagement extends JFrame implements ActionListener {
 		attachActionListenerToButtons();
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setSize(700,400);
+		setSize(900, 500);
 		setVisible(true);
 
 		dbconnectionCheck();  
@@ -71,11 +85,13 @@ public class studentManagement extends JFrame implements ActionListener {
 	void createLoginPasswordTab(JPanel loginPassword) {
 		loginPassword.setBackground(Color.white);
 		Panel loginPanel = new Panel();
+		Label initialPW = new Label("initial password is 0000 ");
 		Label loginPW = new Label("PW  :  ");
 		insertProfessorPassword = new JPasswordField(20);
 		passwordCheckButton = new Button("LOGIN");
 		backToMainButton = new Button("back");
 
+		loginPanel.add(initialPW);
 		loginPanel.add(loginPW);
 		loginPanel.add(insertProfessorPassword);
 		loginPassword.add(loginPanel);
@@ -203,7 +219,7 @@ public class studentManagement extends JFrame implements ActionListener {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			String url = "jdbc:mysql://127.0.0.1:3306/sook?";
 
-			dbConnection = DriverManager.getConnection(url, "root", "root");
+			dbConnection = DriverManager.getConnection(url, "root", "apmsetup");
 			sqlStatement = dbConnection.createStatement();
 			System.out.println("DB Connect!!");
 		}
@@ -221,20 +237,14 @@ public class studentManagement extends JFrame implements ActionListener {
 			goToMainPage();
 		if (e.getSource() == insertStudentInfoButton)
 			addStudentInfo();
-		if (e.getSource() == searchStudentIdToDeleteButton) {
-			String id = idToDelete.getText().trim();
-			String NOTICE_MESSAGE = " exists, you can delete!";
-			informToDelete.setText(searchId(id, NOTICE_MESSAGE));
-		}
+		if (e.getSource() == searchStudentIdToDeleteButton)
+			searchToDelete();
 		if (e.getSource() == deleteStudentInfoButton)
 			deleteStudentById();
-		if (e.getSource() == searchStudentIdToUpdateButton) {
-			String id = idToUpdate.getText().trim();
-			String NOTICE_MESSAGE = " exists, please update phone number!";
-			informToUpdate.setText(searchId(id, NOTICE_MESSAGE));
-		}
+		if (e.getSource() == searchStudentIdToUpdateButton) 
+			searchToUpdate();
 		if (e.getSource() == updateStudentPhoneButton)
-			updateStudentById(idToUpdate.getText().trim(),updatedPhone.getText().trim());
+			updateStudentById(idToUpdate.getText(), updatedPhone.getText().trim());
 		if (e.getSource() == viewStudentInfoButton)
 			viewStudentById(idToView.getText().trim());
 		if (e.getSource() == changeProfessorPasswordButton)
@@ -305,7 +315,7 @@ public class studentManagement extends JFrame implements ActionListener {
 			String phone = insertPhone.getText().trim();
 			if (checkValueExists(id, name, department, phone)) {
 				String sql = "insert into student values(?, ?, ?, ?)";
-				PreparedStatement sqlStatement=dbConnection.prepareStatement(sql);
+				PreparedStatement sqlStatement = dbConnection.prepareStatement(sql);
 				sqlStatement.setString(1, id);
 				sqlStatement.setString(2, name);
 				sqlStatement.setString(3, department );
@@ -326,6 +336,20 @@ public class studentManagement extends JFrame implements ActionListener {
 		return VALID;
 	}
 	
+	void searchToDelete() {
+		String id = idToDelete.getText().trim();
+		String NOTICE_MESSAGE = " exists, you can delete!";
+		String INFORM_MESSAGE = searchId(id, NOTICE_MESSAGE);
+		informToDelete.setText(INFORM_MESSAGE);	
+	}
+	
+	void searchToUpdate() {
+		String id = idToUpdate.getText().trim();
+		String NOTICE_MESSAGE = " exists, please update phone number!";
+		String INFORM_MESSAGE = searchId(id, NOTICE_MESSAGE);
+		informToUpdate.setText(INFORM_MESSAGE);
+	}
+	
 	String searchId(String id, String message) {
 		String update = "";
 		try {
@@ -337,7 +361,7 @@ public class studentManagement extends JFrame implements ActionListener {
 				if (resultset.getString("name") != null)
 					update= "ID "+ id + message;
 		}
-		catch (Exception e) {
+		catch(Exception e) {
 		}
 		return update;
 	}
@@ -350,7 +374,7 @@ public class studentManagement extends JFrame implements ActionListener {
 			sqlStatement.executeUpdate("delete from student where id='" + id + "'");
 			System.out.println("student data delete success");   
 		}
-		catch (Exception e) {
+		catch(Exception e) {
 		}
 	}
 
@@ -362,7 +386,7 @@ public class studentManagement extends JFrame implements ActionListener {
 			sqlStatement.executeUpdate();
 			System.out.println("student data update success");
 		}
-		catch (Exception e) {
+		catch(Exception e) {
 		}
 	}
 
@@ -383,7 +407,7 @@ public class studentManagement extends JFrame implements ActionListener {
 			}
 			System.out.println("student data view success");
 		}
-		catch (Exception e) {
+		catch(Exception e) {
 		}   
 		System.out.println(studentList.getValueAt(0, 0));
 	}
@@ -396,7 +420,7 @@ public class studentManagement extends JFrame implements ActionListener {
 			p.executeUpdate();
 			System.out.println("professor password updated");
 		}
-		catch (Exception e) {
+		catch(Exception e) {
 		}
 	}   
 
