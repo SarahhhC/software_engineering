@@ -9,19 +9,6 @@ public class studentManagement extends JFrame implements ActionListener {
 	JTabbedPane tabpane;
 	Connection dbConnection; 
 	Statement  sqlStatement;
-	Button loginButton, passwordCheckButton, logoutButton, backToMainButton, changeProfessorPasswordButton;;
-	Button insertStudentInfoButton, deleteStudentInfoButton, updateStudentPhoneButton, viewStudentInfoButton;
-	Button searchStudentIdToDeleteButton, searchStudentIdToUpdateButton;
-	JPasswordField insertProfessorPassword;
-	TextField insertId, insertName, insertDepartment, insertPhone; 
-	TextField idToDelete, idToUpdate, updatedPhone, idToView;
-	TextField informToDelete, informToUpdate;
-	TextField insertedLoginID, newPassword;
-
-	String index[] = {"ID", "NAME", "DEPARTMENT", "PHONE"}; 
-	DefaultTableModel listmodel = new DefaultTableModel(index, 0);
-	JTable studentList = new JTable(listmodel); 
-
 	JPanel loginId = new JPanel();
 	JPanel loginPassword = new JPanel();
 	JPanel logout = new JPanel();
@@ -30,6 +17,33 @@ public class studentManagement extends JFrame implements ActionListener {
 	JPanel deleteStudent = new JPanel();
 	JPanel updateStudent = new JPanel();
 	JPanel viewStudent = new JPanel();
+	Button loginButton;
+	Button passwordCheckButton;
+	Button logoutButton;
+	Button backToMainButton;
+	Button insertStudentInfoButton;
+	Button searchStudentIdToDeleteButton;
+	Button deleteStudentInfoButton;
+	Button searchStudentIdToUpdateButton;
+	Button updateStudentPhoneButton;
+	Button viewStudentInfoButton;
+	Button changeProfessorPasswordButton;
+	TextField insertId;
+	TextField insertName;
+	TextField insertDepartment;
+	TextField insertPhone; 
+	TextField idToDelete;
+	TextField idToUpdate;
+	TextField updatedPhone;
+	TextField idToView;
+	TextField informToDelete;
+	TextField informToUpdate;
+	TextField insertedLoginID;
+	TextField newPassword;
+	JPasswordField insertProfessorPassword;
+	String index[] = {"ID", "NAME", "DEPARTMENT", "PHONE"}; 
+	DefaultTableModel listmodel = new DefaultTableModel(index, 0);
+	JTable studentList = new JTable(listmodel); 
 
 	public studentManagement() throws IndexOutOfBoundsException {
 		super("Student Management Program");
