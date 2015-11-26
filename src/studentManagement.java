@@ -9,38 +9,30 @@ public class studentManagement extends JFrame implements ActionListener {
 	JTabbedPane tabpane;
 	Connection dbConnection; 
 	Statement  sqlStatement;
-	JPanel loginId = new JPanel();
-	JPanel loginPassword = new JPanel();
-	JPanel logout = new JPanel();
-	JPanel changePassword = new JPanel();
-	JPanel addStudent = new JPanel();
-	JPanel deleteStudent = new JPanel();
-	JPanel updateStudent = new JPanel();
-	JPanel viewStudent = new JPanel();
-	Button loginButton;
-	Button passwordCheckButton;
-	Button logoutButton;
-	Button backToMainButton;
-	Button insertStudentInfoButton;
-	Button searchStudentIdToDeleteButton;
-	Button deleteStudentInfoButton;
-	Button searchStudentIdToUpdateButton;
-	Button updateStudentPhoneButton;
-	Button viewStudentInfoButton;
-	Button changeProfessorPasswordButton;
-	TextField insertId;
-	TextField insertName;
-	TextField insertDepartment;
-	TextField insertPhone; 
-	TextField idToDelete;
-	TextField idToUpdate;
-	TextField updatedPhone;
-	TextField idToView;
-	TextField informToDelete;
-	TextField informToUpdate;
-	TextField insertedLoginID;
-	TextField newPassword;
-	JPasswordField insertProfessorPassword;
+	Button buttonToLogin;
+	Button buttonToCheckPassword;
+	Button buttonToLogout;
+	Button buttonToBackMainPage;
+	Button buttonToAddStudentInfo;
+	Button buttonToSearchAndDelete;
+	Button buttonToDeleteStudentInfo;
+	Button buttonToSearchAndUpdate;
+	Button buttonToUpdateStudentPhone;
+	Button buttonToViewStudentInfo;
+	Button buttonToChangeProfessorPassword;
+	TextField textfieldToAddId;
+	TextField textfieldToAddName;
+	TextField textfieldToAddDepartment;
+	TextField textfieldToAddPhone; 
+	TextField textfieldToDeleteId;
+	TextField textfieldToUpdateId;
+	TextField textfieldToUpdatePhone;
+	TextField textfieldToViewId;
+	TextField textfieldToInformDeletion;
+	TextField textfieldToInformUpdate;
+	TextField textfieldToLoginById;
+	TextField textfieldToAddNewPassword;
+	JPasswordField passwordFieldForProfessor;
 	String index[] = {"ID", "NAME", "DEPARTMENT", "PHONE"}; 
 	DefaultTableModel listmodel = new DefaultTableModel(index, 0);
 	JTable studentList = new JTable(listmodel); 
@@ -48,20 +40,9 @@ public class studentManagement extends JFrame implements ActionListener {
 	public studentManagement() throws IndexOutOfBoundsException {
 		super("Student Management Program");
 		tabpane = new JTabbedPane();
+		tabpane.addTab("Login", createLoginIdTab());
 
-		createLoginIdTab(loginId);
-		createLoginPasswordTab(loginPassword);
-		createLogoutTab(logout);
-		createAddTab(addStudent);
-		createDeleteTab(deleteStudent);
-		createUpdateTab(updateStudent);
-		createViewTab(viewStudent);
-		createChangePasswordTab(changePassword);
-
-		tabpane.addTab("Login", loginId);
 		getContentPane().add(tabpane, BorderLayout.CENTER);
-		attachActionListenerToButtons();
-
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(900, 500);
 		setVisible(true);
@@ -69,149 +50,21 @@ public class studentManagement extends JFrame implements ActionListener {
 		dbconnectionCheck();  
 	}
 
-	void createLoginIdTab(JPanel loginId) {
-		loginId.setBackground(Color.white);
+	JPanel createLoginIdTab() {
+		JPanel panelToLoginById = new JPanel();
+		panelToLoginById.setBackground(Color.white);
 		Panel loginPanel = new Panel();
-		Label loginID = new Label("ID  :  ");
-		insertedLoginID = new TextField(20);
-		loginButton = new Button("LOGIN");
+		Label loginId = new Label("ID  :  ");
+		textfieldToLoginById = new TextField(20);
+		buttonToLogin = new Button("LOGIN");
+		buttonToLogin.addActionListener(this);
 
-		loginPanel.add(loginID);
-		loginPanel.add(insertedLoginID);
-		loginId.add(loginPanel);
-		loginId.add(loginButton);
-	}
+		loginPanel.add(loginId);
+		loginPanel.add(textfieldToLoginById);
+		panelToLoginById.add(loginPanel);
+		panelToLoginById.add(buttonToLogin);
 
-	void createLoginPasswordTab(JPanel loginPassword) {
-		loginPassword.setBackground(Color.white);
-		Panel loginPanel = new Panel();
-		Label initialPW = new Label("initial password is 0000 ");
-		Label loginPW = new Label("PW  :  ");
-		insertProfessorPassword = new JPasswordField(20);
-		passwordCheckButton = new Button("LOGIN");
-		backToMainButton = new Button("back");
-
-		loginPanel.add(initialPW);
-		loginPanel.add(loginPW);
-		loginPanel.add(insertProfessorPassword);
-		loginPassword.add(loginPanel);
-		loginPassword.add(passwordCheckButton);
-		loginPassword.add(backToMainButton);
-	}
-
-	void createLogoutTab(JPanel logout) {
-		logoutButton = new Button("Logout");
-
-		logout.add(logoutButton);
-	}
-
-	void createAddTab(JPanel addStudent) {
-		addStudent.setLayout(new GridLayout(9,1));
-		addStudent.setBackground(Color.white);
-		Label studentID_add = new Label("Student ID");
-		Label studentName = new Label("Name");
-		Label studentDept = new Label("Department");
-		Label studentPhone = new Label("Phone number");
-		insertId = new TextField(20);
-		insertName = new TextField(20);
-		insertDepartment = new TextField(20);
-		insertPhone = new TextField(20);
-		insertStudentInfoButton = new Button("ADD");
-
-		addStudent.add(studentID_add);
-		addStudent.add(insertId);
-		addStudent.add(studentName);
-		addStudent.add(insertName);
-		addStudent.add(studentDept);
-		addStudent.add(insertDepartment);
-		addStudent.add(studentPhone);
-		addStudent.add(insertPhone);
-		addStudent.add(insertStudentInfoButton);   
-	}
-
-	void createDeleteTab(JPanel deleteStudent) {
-		deleteStudent.setLayout(new BorderLayout(5, 5));
-		deleteStudent.setBackground(Color.white);
-		Panel inputPanel = new Panel();
-		Label studentID_delete = new Label("Student ID");
-		idToDelete = new TextField(20); 
-		searchStudentIdToDeleteButton = new Button("SEARCH"); 
-		informToDelete = new TextField("Please, Search Id to delete");
-		deleteStudentInfoButton = new Button("DELETE");
-		deleteStudentInfoButton.setSize(300,10);
-
-		inputPanel.add(studentID_delete);
-		inputPanel.add(idToDelete);
-		inputPanel.add(searchStudentIdToDeleteButton);
-		deleteStudent.add(inputPanel,BorderLayout.NORTH);
-		deleteStudent.add(informToDelete, BorderLayout.CENTER);
-		deleteStudent.add(deleteStudentInfoButton, BorderLayout.SOUTH);
-	}
-
-	void createUpdateTab(JPanel updateStudent) {
-		updateStudent.setBackground(Color.white);
-		Panel inputPanel = new Panel();
-		Label studentID_update = new Label("Student ID");
-		idToUpdate = new TextField(20); 
-		searchStudentIdToUpdateButton = new Button("SEARCH");
-		Panel phonePanel = new Panel();
-		Label newPhone = new Label("New Phone Number");
-		updatedPhone = new TextField(20);
-		updateStudentPhoneButton = new Button("UPDATE");
-		informToUpdate = new TextField("Please, Search Id to Update Phone Number");   
-
-		inputPanel.add(studentID_update);
-		inputPanel.add(idToUpdate);
-		inputPanel.add(searchStudentIdToUpdateButton);
-		phonePanel.add(newPhone);
-		phonePanel.add(updatedPhone);
-		phonePanel.add(updateStudentPhoneButton);
-		updateStudent.add(inputPanel,BorderLayout.NORTH);
-		updateStudent.add(informToUpdate,BorderLayout.CENTER);
-		updateStudent.add(phonePanel,BorderLayout.SOUTH);
-	}
-
-	void createViewTab(JPanel viewStudent) {
-		viewStudent.setBackground(Color.white);
-		JPanel inputPanel = new JPanel();
-		Label studentID_view = new Label("Student ID");
-		idToView = new TextField(20); 
-		viewStudentInfoButton = new Button("SEARCH");
-		JScrollPane scroll = new JScrollPane(studentList);
-		scroll.setSize(17,20);
-
-		inputPanel.add(studentID_view);
-		inputPanel.add(idToView);
-		inputPanel.add(viewStudentInfoButton);
-		viewStudent.add(inputPanel,BorderLayout.NORTH);
-		viewStudent.add(scroll,BorderLayout.SOUTH);
-	}
-
-	void createChangePasswordTab(JPanel changePassword) {
-		changePassword.setBackground(Color.white);
-		Panel inputPanel = new Panel();
-		Label NOTICE_PW = new Label("Enter New Password");
-		newPassword = new TextField(20);
-		changeProfessorPasswordButton = new Button("CHANGE");
-
-		inputPanel.add(NOTICE_PW);
-		inputPanel.add(newPassword);
-		inputPanel.add(changeProfessorPasswordButton);
-		changePassword.add(inputPanel);
-	}
-
-	void attachActionListenerToButtons() {
-		loginButton.addActionListener(this);
-		passwordCheckButton.addActionListener(this);
-		logoutButton.addActionListener(this);
-		insertStudentInfoButton.addActionListener(this);
-		searchStudentIdToDeleteButton.addActionListener(this);
-		deleteStudentInfoButton.addActionListener(this);
-		searchStudentIdToUpdateButton.addActionListener(this);
-		updateStudentPhoneButton.addActionListener(this);
-		viewStudentInfoButton.addActionListener(this);
-		changeProfessorPasswordButton.addActionListener(this);
-		backToMainButton.addActionListener(this);
+		return panelToLoginById;
 	}
 
 	void dbconnectionCheck() {
@@ -219,7 +72,7 @@ public class studentManagement extends JFrame implements ActionListener {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			String url = "jdbc:mysql://127.0.0.1:3306/sook?";
 
-			dbConnection = DriverManager.getConnection(url, "root", "apmsetup");
+			dbConnection = DriverManager.getConnection(url, "root", "root");
 			sqlStatement = dbConnection.createStatement();
 			System.out.println("DB Connect!!");
 		}
@@ -229,99 +82,252 @@ public class studentManagement extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == loginButton)
+		if (e.getSource() == buttonToLogin)
 			checkAuthority();
-		if (e.getSource() == passwordCheckButton)
-			checkPassword(insertedLoginID.getText().trim());
-		if (e.getSource() == logoutButton || e.getSource() == backToMainButton)
+		if (e.getSource() == buttonToCheckPassword)
+			checkPassword(textfieldToLoginById.getText().trim());
+		if (e.getSource() == buttonToLogout || e.getSource() == buttonToBackMainPage)
 			goToMainPage();
-		if (e.getSource() == insertStudentInfoButton)
+		if (e.getSource() == buttonToAddStudentInfo)
 			addStudentInfo();
-		if (e.getSource() == searchStudentIdToDeleteButton)
+		if (e.getSource() == buttonToSearchAndDelete)
 			searchToDelete();
-		if (e.getSource() == deleteStudentInfoButton)
+		if (e.getSource() == buttonToDeleteStudentInfo)
 			deleteStudentById();
-		if (e.getSource() == searchStudentIdToUpdateButton) 
+		if (e.getSource() == buttonToSearchAndUpdate) 
 			searchToUpdate();
-		if (e.getSource() == updateStudentPhoneButton)
-			updateStudentById(idToUpdate.getText(), updatedPhone.getText().trim());
-		if (e.getSource() == viewStudentInfoButton)
-			viewStudentById(idToView.getText().trim());
-		if (e.getSource() == changeProfessorPasswordButton)
-			updateProfessorPassword(newPassword.getText().trim());
+		if (e.getSource() == buttonToUpdateStudentPhone)
+			updateStudentById(textfieldToUpdateId.getText(), textfieldToUpdatePhone.getText().trim());
+		if (e.getSource() == buttonToViewStudentInfo)
+			viewStudentById(textfieldToViewId.getText().trim());
+		if (e.getSource() == buttonToChangeProfessorPassword)
+			updateProfessorPassword(textfieldToAddNewPassword.getText().trim());
 	}
 
 	void checkAuthority() {
 		tabpane.removeTabAt(0);
-		if (insertedLoginID.getText().equals("professor"))
-			tabpane.addTab("Insert Password", loginPassword);
-		else if (insertedLoginID.getText().equals("guest")) {
-			tabpane.addTab("View Student's Information", viewStudent);
-			tabpane.addTab("Logout", logout);
-		}
+		if (textfieldToLoginById.getText().equals("professor"))
+			tabpane.addTab("Password", createLoginPasswordTab());
+		else if (textfieldToLoginById.getText().equals("guest"))
+			showTabsForGuest();
 		else {
-			tabpane.addTab("Login", loginId);
-			insertedLoginID.setText("Wrong Id");
+			goToMainPage();
+			textfieldToLoginById.setText("Wrong Id");
 		}
 	}
 
-	void checkPassword(String insertedId) {
+	void checkPassword(String addedId) {
 		try {
-			String sql = "select password from login where id = '" + insertedId + "' ";
-			PreparedStatement p = dbConnection.prepareStatement(sql);
-			ResultSet resultset = p.executeQuery();
+			String sql = "select password from login where id = '" + addedId + "' ";
+			PreparedStatement sqlStatement = dbConnection.prepareStatement(sql);
+			ResultSet resultset = sqlStatement.executeQuery();
 			while(resultset.next()) 
-				if (resultset.getString("password").equals(insertProfessorPassword.getText()))
-					showTabsProfessorAuthority();
+				if (resultset.getString("password").equals(passwordFieldForProfessor.getText()))
+					showTabsForProfessor();
 		}
 		catch(Exception e) {
 		}
 	}
 
-	void showTabsProfessorAuthority() {
+	void showTabsForGuest() {
+		tabpane.addTab("View Student's Information", createViewTab());
+		tabpane.addTab("Logout", createLogoutTab());
+	}
+
+	void showTabsForProfessor() {
 		tabpane.removeTabAt(0);
-		tabpane.addTab("Add New Student", addStudent);
-		tabpane.addTab("Delete Student", deleteStudent);
-		tabpane.addTab("Update Student's Phone Number", updateStudent);
-		tabpane.addTab("View Student's Information", viewStudent);
-		tabpane.addTab("Change Password", changePassword);
-		tabpane.addTab("Logout", logout);
+		tabpane.addTab("Add New Student", createAddTab());
+		tabpane.addTab("Delete Student", createDeleteTab());
+		tabpane.addTab("Update Student's Phone Number", createUpdateTab());
+		tabpane.addTab("View Student's Information", createViewTab());
+		tabpane.addTab("Change Password", createChangePasswordTab());
+		tabpane.addTab("Logout", createLogoutTab());
+	}
+
+	JPanel createLoginPasswordTab() {
+		JPanel panelToLoginByPassword = new JPanel();
+		panelToLoginByPassword.setBackground(Color.white);
+		Panel loginPanel = new Panel();
+		Label initialPassword = new Label("initial password is 0000 ");
+		Label loginPassword = new Label("Password  :  ");
+		passwordFieldForProfessor = new JPasswordField(20);
+		buttonToCheckPassword = new Button("LOGIN");
+		buttonToCheckPassword.addActionListener(this);
+		buttonToBackMainPage = new Button("back");
+		buttonToBackMainPage.addActionListener(this);
+
+		loginPanel.add(initialPassword);
+		loginPanel.add(loginPassword);
+		loginPanel.add(passwordFieldForProfessor);
+		panelToLoginByPassword.add(loginPanel);
+		panelToLoginByPassword.add(buttonToCheckPassword);
+		panelToLoginByPassword.add(buttonToBackMainPage);
+
+		return panelToLoginByPassword;
+	}
+
+	JPanel createLogoutTab() {
+		JPanel panelToLogout = new JPanel();
+		buttonToLogout = new Button("Logout");
+
+		buttonToLogout.addActionListener(this);
+		panelToLogout.add(buttonToLogout);
+
+		return panelToLogout;
+	}
+
+	JPanel createAddTab() {
+		JPanel panelToAddStudent = new JPanel();
+		panelToAddStudent.setLayout(new GridLayout(9,1));
+		panelToAddStudent.setBackground(Color.white);
+		Label studentId_add = new Label("Student ID");
+		Label studentName = new Label("Name");
+		Label studentDept = new Label("Department");
+		Label studentPhone = new Label("Phone number");
+		textfieldToAddId = new TextField(20);
+		textfieldToAddName = new TextField(20);
+		textfieldToAddDepartment = new TextField(20);
+		textfieldToAddPhone = new TextField(20);
+		buttonToAddStudentInfo = new Button("ADD");
+		buttonToAddStudentInfo.addActionListener(this);
+
+		panelToAddStudent.add(studentId_add);
+		panelToAddStudent.add(textfieldToAddId);
+		panelToAddStudent.add(studentName);
+		panelToAddStudent.add(textfieldToAddName);
+		panelToAddStudent.add(studentDept);
+		panelToAddStudent.add(textfieldToAddDepartment);
+		panelToAddStudent.add(studentPhone);
+		panelToAddStudent.add(textfieldToAddPhone);
+		panelToAddStudent.add(buttonToAddStudentInfo);
+
+		return panelToAddStudent;
+	}
+
+	JPanel createDeleteTab() {
+		JPanel panelToDeleteStudent = new JPanel();
+		panelToDeleteStudent.setLayout(new BorderLayout(5, 5));
+		panelToDeleteStudent.setBackground(Color.white);
+		Panel inputPanel = new Panel();
+		Label studentId_delete = new Label("Student ID");
+		textfieldToDeleteId = new TextField(20); 
+		buttonToSearchAndDelete = new Button("SEARCH");
+		buttonToSearchAndDelete.addActionListener(this);
+		textfieldToInformDeletion = new TextField("Please, Search Id to delete");
+		buttonToDeleteStudentInfo = new Button("DELETE");
+		buttonToDeleteStudentInfo.addActionListener(this);
+		buttonToDeleteStudentInfo.setSize(300,10);
+
+		inputPanel.add(studentId_delete);
+		inputPanel.add(textfieldToDeleteId);
+		inputPanel.add(buttonToSearchAndDelete);
+		panelToDeleteStudent.add(inputPanel,BorderLayout.NORTH);
+		panelToDeleteStudent.add(textfieldToInformDeletion, BorderLayout.CENTER);
+		panelToDeleteStudent.add(buttonToDeleteStudentInfo, BorderLayout.SOUTH);
+
+		return panelToDeleteStudent;
+	}
+
+	JPanel createUpdateTab() {
+		JPanel panelToUpdateStudent = new JPanel();
+		panelToUpdateStudent.setBackground(Color.white);
+		Panel inputPanel = new Panel();
+		Label studentId_update = new Label("Student ID");
+		textfieldToUpdateId = new TextField(20); 
+		buttonToSearchAndUpdate = new Button("SEARCH");
+		buttonToSearchAndUpdate.addActionListener(this);
+		Panel phonePanel = new Panel();
+		Label newPhone = new Label("New Phone Number");
+		textfieldToUpdatePhone = new TextField(20);
+		buttonToUpdateStudentPhone = new Button("UPDATE");
+		buttonToUpdateStudentPhone.addActionListener(this);
+		textfieldToInformUpdate = new TextField("Please, Search Id to Update Phone Number");   
+
+		inputPanel.add(studentId_update);
+		inputPanel.add(textfieldToUpdateId);
+		inputPanel.add(buttonToSearchAndUpdate);
+		phonePanel.add(newPhone);
+		phonePanel.add(textfieldToUpdatePhone);
+		phonePanel.add(buttonToUpdateStudentPhone);
+		panelToUpdateStudent.add(inputPanel,BorderLayout.NORTH);
+		panelToUpdateStudent.add(textfieldToInformUpdate,BorderLayout.CENTER);
+		panelToUpdateStudent.add(phonePanel,BorderLayout.SOUTH);
+
+		return panelToUpdateStudent;
+	}
+
+	JPanel createViewTab() {
+		JPanel panelToViewStudent = new JPanel();
+		panelToViewStudent.setBackground(Color.white);
+		JPanel inputPanel = new JPanel();
+		Label studentId_view = new Label("Student ID");
+		textfieldToViewId = new TextField(20); 
+		buttonToViewStudentInfo = new Button("SEARCH");
+		buttonToViewStudentInfo.addActionListener(this);
+		JScrollPane scroll = new JScrollPane(studentList);
+		scroll.setSize(17,20);
+
+		inputPanel.add(studentId_view);
+		inputPanel.add(textfieldToViewId);
+		inputPanel.add(buttonToViewStudentInfo);
+		panelToViewStudent.add(inputPanel,BorderLayout.NORTH);
+		panelToViewStudent.add(scroll,BorderLayout.SOUTH);
+
+		return panelToViewStudent;
+	}
+
+	JPanel createChangePasswordTab() {
+		JPanel panelToChangePassword = new JPanel();
+		panelToChangePassword.setBackground(Color.white);
+		Panel inputPanel = new Panel();
+		Label noticePassword = new Label("Enter New Password");
+		textfieldToAddNewPassword = new TextField(20);
+		buttonToChangeProfessorPassword = new Button("CHANGE");
+		buttonToChangeProfessorPassword.addActionListener(this);
+
+		inputPanel.add(noticePassword);
+		inputPanel.add(textfieldToAddNewPassword);
+		inputPanel.add(buttonToChangeProfessorPassword);
+		panelToChangePassword.add(inputPanel);
+
+		return panelToChangePassword;
 	}
 
 	void goToMainPage() {
 		tabpane.removeAll();
-		tabpane.addTab("Login", loginId);
-		System.out.println(listmodel.getRowCount());
+		tabpane.addTab("Login", createLoginIdTab());
 		for (int i = listmodel.getRowCount() - 1; i >= 0; i--)
 			listmodel.removeRow(i);
-		insertId.setText("");
-		insertName.setText("");
-		insertDepartment.setText("");
-		insertPhone.setText("");
-		idToDelete.setText("");
-		informToDelete.setText("Please, Search Id to delete");
-		idToUpdate.setText("");
-		informToUpdate.setText("Please, Search Id to Update Phone Number");
-		updatedPhone.setText("");
-		idToView.setText("");
-		newPassword.setText("");
+		if (textfieldToLoginById.getText() == "professor") {
+			textfieldToAddId.setText("");
+			textfieldToAddName.setText("");
+			textfieldToAddDepartment.setText("");
+			textfieldToAddPhone.setText("");
+			textfieldToDeleteId.setText("");
+			textfieldToInformDeletion.setText("Please, Search Id to delete");
+			textfieldToUpdateId.setText("");
+			textfieldToInformUpdate.setText("Please, Search Id to Update Phone Number");
+			textfieldToUpdatePhone.setText("");
+			textfieldToViewId.setText("");
+			textfieldToAddNewPassword.setText("");
+		}
 	}
 
 	void addStudentInfo() {
 		try {
-			String id = insertId.getText().trim();
-			String name = insertName.getText().trim();
-			String department = insertDepartment.getText().trim();
-			String phone = insertPhone.getText().trim();
+			String id = textfieldToAddId.getText().trim();
+			String name = textfieldToAddName.getText().trim();
+			String department = textfieldToAddDepartment.getText().trim();
+			String phone = textfieldToAddPhone.getText().trim();
 			if (checkValueExists(id, name, department, phone)) {
-				String sql = "insert into student values(?, ?, ?, ?)";
+				String sql = "add into student values(?, ?, ?, ?)";
 				PreparedStatement sqlStatement = dbConnection.prepareStatement(sql);
 				sqlStatement.setString(1, id);
 				sqlStatement.setString(2, name);
 				sqlStatement.setString(3, department );
 				sqlStatement.setString(4, phone);
 				sqlStatement.executeUpdate();
-				System.out.println("student data insert success");
+				System.out.println("student data add success");
 			}
 		}
 		catch(Exception e) {
@@ -330,32 +336,32 @@ public class studentManagement extends JFrame implements ActionListener {
 
 	boolean checkValueExists(String id, String name, String department, String phone) {
 		boolean VALID = true;
-		if ( id == null || name == null || department == null || insertPhone == null)
+		if ( id == null || name == null || department == null || phone == null)
 			VALID = false;
-		
+
 		return VALID;
 	}
-	
+
 	void searchToDelete() {
-		String id = idToDelete.getText().trim();
+		String id = textfieldToDeleteId.getText().trim();
 		String NOTICE_MESSAGE = " exists, you can delete!";
 		String INFORM_MESSAGE = searchId(id, NOTICE_MESSAGE);
-		informToDelete.setText(INFORM_MESSAGE);	
+		textfieldToInformDeletion.setText(INFORM_MESSAGE);   
 	}
-	
+
 	void searchToUpdate() {
-		String id = idToUpdate.getText().trim();
+		String id = textfieldToUpdateId.getText().trim();
 		String NOTICE_MESSAGE = " exists, please update phone number!";
 		String INFORM_MESSAGE = searchId(id, NOTICE_MESSAGE);
-		informToUpdate.setText(INFORM_MESSAGE);
+		textfieldToInformUpdate.setText(INFORM_MESSAGE);
 	}
-	
+
 	String searchId(String id, String message) {
 		String update = "";
 		try {
 			String sql = "select name from student where id='" + id + "' ";
-			PreparedStatement p = dbConnection.prepareStatement(sql);
-			ResultSet resultset = p.executeQuery(); 
+			PreparedStatement sqlStatement = dbConnection.prepareStatement(sql);
+			ResultSet resultset = sqlStatement.executeQuery(); 
 			update = "ID "+id+" not exists";
 			while(resultset.next())
 				if (resultset.getString("name") != null)
@@ -368,7 +374,7 @@ public class studentManagement extends JFrame implements ActionListener {
 
 	void deleteStudentById() {
 		try {
-			String id = idToDelete.getText().trim();
+			String id = textfieldToDeleteId.getText().trim();
 			if (id == null || id.length() == 0)
 				return ;
 			sqlStatement.executeUpdate("delete from student where id='" + id + "'");
@@ -381,7 +387,7 @@ public class studentManagement extends JFrame implements ActionListener {
 	void updateStudentById(String id,String phone) {
 		try {
 			String sql = "update student set phone = ? where id ='" + id + "'";
-			PreparedStatement sqlStatement=dbConnection.prepareStatement(sql);
+			PreparedStatement sqlStatement = dbConnection.prepareStatement(sql);
 			sqlStatement.setString(1, phone);
 			sqlStatement.executeUpdate();
 			System.out.println("student data update success");
@@ -395,8 +401,8 @@ public class studentManagement extends JFrame implements ActionListener {
 		listmodel = (DefaultTableModel) studentList.getModel();
 		try {
 			String sql = "select * from student where id='" + id + "'";
-			PreparedStatement p = dbConnection.prepareStatement(sql);
-			ResultSet resultset = p.executeQuery(); 
+			PreparedStatement sqlStatement = dbConnection.prepareStatement(sql);
+			ResultSet resultset = sqlStatement.executeQuery(); 
 			while(resultset.next()) {
 				info[0] = resultset.getString("id");
 				info[1] = resultset.getString("name");
@@ -415,9 +421,9 @@ public class studentManagement extends JFrame implements ActionListener {
 	void updateProfessorPassword(String newpassword) {   
 		try {
 			String sql = "update login set password = ? where id = 'professor'";
-			PreparedStatement p = dbConnection.prepareStatement(sql);
-			p.setString(1, newpassword);
-			p.executeUpdate();
+			PreparedStatement sqlStatement = dbConnection.prepareStatement(sql);
+			sqlStatement.setString(1, newpassword);
+			sqlStatement.executeUpdate();
 			System.out.println("professor password updated");
 		}
 		catch(Exception e) {
