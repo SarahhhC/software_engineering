@@ -72,7 +72,7 @@ public class studentManagement extends JFrame implements ActionListener {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			String url = "jdbc:mysql://127.0.0.1:3306/sook?";
 
-			dbConnection = DriverManager.getConnection(url, "root", "root");
+			dbConnection = DriverManager.getConnection(url, "root", "apmsetup");
 			sqlStatement = dbConnection.createStatement();
 			System.out.println("DB Connect!!");
 		}
@@ -320,7 +320,7 @@ public class studentManagement extends JFrame implements ActionListener {
 			String department = textfieldToAddDepartment.getText().trim();
 			String phone = textfieldToAddPhone.getText().trim();
 			if (checkValueExists(id, name, department, phone)) {
-				String sql = "add into student values(?, ?, ?, ?)";
+				String sql = "insert into student values(?, ?, ?, ?)";
 				PreparedStatement sqlStatement = dbConnection.prepareStatement(sql);
 				sqlStatement.setString(1, id);
 				sqlStatement.setString(2, name);
