@@ -85,7 +85,7 @@ public class studentManagement extends JFrame implements ActionListener {
 		if (e.getSource() == buttonToLogin)
 			checkAuthority();
 		if (e.getSource() == buttonToCheckPassword)
-			checkPassword(textfieldToLoginById.getText().trim());
+			checkProfessorPassword(textfieldToLoginById.getText().trim());
 		if (e.getSource() == buttonToLogout || e.getSource() == buttonToBackMainPage)
 			goToMainPage();
 		if (e.getSource() == buttonToAddStudentInfo)
@@ -116,7 +116,7 @@ public class studentManagement extends JFrame implements ActionListener {
 		}
 	}
 
-	void checkPassword(String addedId) {
+	void checkProfessorPassword(String addedId) {
 		try {
 			String sql = "select password from login where id = '" + addedId + "' ";
 			PreparedStatement sqlStatement = dbConnection.prepareStatement(sql);
