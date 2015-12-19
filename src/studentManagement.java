@@ -39,13 +39,13 @@ public class studentManagement extends JFrame implements ActionListener {
 		super("Student Management Program");
 		tabpane = new JTabbedPane();
 		tabpane.addTab("Login", createLoginIdTab());
-		
+
 		getContentPane().add(tabpane, BorderLayout.CENTER);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(900, 500);
 		setVisible(true);
 
-		dbconnectionCheck();  
+		dbconnectionCheck("root");  
 	}
 
 	JPanel createLoginIdTab() {
@@ -65,17 +65,19 @@ public class studentManagement extends JFrame implements ActionListener {
 		return panelToLoginById;
 	}
 
-	void dbconnectionCheck() {
+	boolean dbconnectionCheck(String password) {
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			String url = "jdbc:mysql://127.0.0.1:3306/sook?";
 
-			dbConnection = DriverManager.getConnection(url, "root", "apmsetup");
+			dbConnection = DriverManager.getConnection(url, "root", password);
 			sqlStatement = dbConnection.createStatement();
 			System.out.println("DB Connect!!");
+			return true;
 		}
 		catch (Exception e) {
 			e.printStackTrace(System.out);
+			return false;
 		}
 	}
 
@@ -85,18 +87,31 @@ public class studentManagement extends JFrame implements ActionListener {
 			String id = textfieldToLoginById.getText().trim();
 			checkAuthority(id);
 		}
-		else if (clickedButton == buttonToCheckPassword)
-			checkProfessorPassword();
+		else if (clickedButton == buttonToCheckPassword) {
+			String password = passwordFieldForProfessor.getText();
+			checkProfessorPassword(password);
+		}
 		else if (clickedButton == buttonToLogout || clickedButton == buttonToBackMainPage)
 			goToMainPage();
-		else if (clickedButton == buttonToAddStudentInfo)
-			addStudentInfo();
-		else if (clickedButton == buttonToSearchAndDelete)
-			searchToDelete();
-		else if (clickedButton == buttonToDeleteStudentInfo)
-			deleteStudentById();
-		else if (clickedButton == buttonToSearchAndUpdate) 
-			searchToUpdate();
+		else if (clickedButton == buttonToAddStudentInfo) {
+			String id = textfieldToAddId.getText().trim();
+			String name = textfieldToAddName.getText().trim();
+			String department = textfieldToAddDepartment.getText().trim();
+			String phone = textfieldToAddPhone.getText().trim();
+			addStudentInfo(id, name, department, phone);
+		}
+		else if (clickedButton == buttonToSearchAndDelete) {
+			String id = textfieldToDeleteId.getText().trim();
+			informIdToDelete(id);
+		}
+		else if (clickedButton == buttonToDeleteStudentInfo) {
+			String id = textfieldToDeleteId.getText().trim();
+			deleteStudentById(id);
+		}
+		else if (clickedButton == buttonToSearchAndUpdate) {
+			String id = textfieldToUpdateId.getText().trim();
+			informIdToUpdate(id);
+		}
 		else if (clickedButton == buttonToUpdateStudentPhone) {
 			String id = textfieldToUpdateId.getText().trim();
 			String newPhone = textfieldToUpdatePhone.getText().trim();
@@ -112,34 +127,44 @@ public class studentManagement extends JFrame implements ActionListener {
 		}
 	}
 
-	void checkAuthority(String id) {
-		tabpane.removeTabAt(0);
-		if (id.equals("professor"))
+	boolean checkAuthority(String id) {
+		if (id.equals("professor")) {
+			tabpane.removeTabAt(0);
 			tabpane.addTab("Password", createLoginPasswordTab());
-		else if (id.equals("guest"))
+			return true;
+		}
+		else if (id.equals("guest")) {
 			showTabsForGuest();
+			return true;
+		}
 		else {
 			goToMainPage();
 			textfieldToLoginById.setText("Wrong Id");
+			return false;
 		}
 	}
 
-	void checkProfessorPassword() {
+
+	void checkProfessorPassword(String password) {
 		try {
 			String sql = "select password from login where id = 'professor' ";
 			PreparedStatement sqlStatement = dbConnection.prepareStatement(sql);
 			ResultSet resultset = sqlStatement.executeQuery();
 			while(resultset.next()) 
-				if (resultset.getString("password").equals(passwordFieldForProfessor.getText()))
+				if (resultset.getString("password").equals(password))
 					showTabsForProfessor();
 		}
-		catch(Exception e) {
+		catch (Exception e) {
 		}
 	}
 
+
 	void showTabsForGuest() {
+		tabpane.removeTabAt(0);
 		tabpane.addTab("View Student's Information", createViewTab());
 		tabpane.addTab("Logout", createLogoutTab());
+		tabpane.getComponentAt(0).setName("viewTab");
+		tabpane.getComponentAt(1).setName("logoutTab");
 	}
 
 	void showTabsForProfessor() {
@@ -150,6 +175,12 @@ public class studentManagement extends JFrame implements ActionListener {
 		tabpane.addTab("View Student's Information", createViewTab());
 		tabpane.addTab("Change Password", createChangePasswordTab());
 		tabpane.addTab("Logout", createLogoutTab());
+		tabpane.getComponent(0).setName("addTab");
+		tabpane.getComponent(1).setName("deleteTab");
+		tabpane.getComponent(2).setName("updateTab");
+		tabpane.getComponent(3).setName("viewTab");
+		tabpane.getComponent(4).setName("changePasswordTab");
+		tabpane.getComponent(5).setName("logoutTab");
 	}
 
 	JPanel createLoginPasswordTab() {
@@ -285,12 +316,12 @@ public class studentManagement extends JFrame implements ActionListener {
 
 		return panelToViewStudent;
 	}
-	
+
 	JTable createViewTable() {
 		String index[] = {"ID", "NAME", "DEPARTMENT", "PHONE"}; 
 		DefaultTableModel listmodel = new DefaultTableModel(index, 0);
 		JTable studentListTable = new JTable(listmodel);
-		
+
 		return studentListTable;
 	}
 
@@ -332,12 +363,8 @@ public class studentManagement extends JFrame implements ActionListener {
 		}
 	}
 
-	void addStudentInfo() {
+	void addStudentInfo(String id, String name, String department, String phone) {
 		try {
-			String id = textfieldToAddId.getText().trim();
-			String name = textfieldToAddName.getText().trim();
-			String department = textfieldToAddDepartment.getText().trim();
-			String phone = textfieldToAddPhone.getText().trim();
 			if (isValueNotNull(id, name, department, phone)) {
 				String sql = "insert into student values(?, ?, ?, ?)";
 				PreparedStatement sqlStatement = dbConnection.prepareStatement(sql);
@@ -349,7 +376,7 @@ public class studentManagement extends JFrame implements ActionListener {
 				System.out.println("student data add success");
 			}
 		}
-		catch(Exception e) {
+		catch (Exception e) {
 		}
 	}
 
@@ -361,92 +388,114 @@ public class studentManagement extends JFrame implements ActionListener {
 		return VALID;
 	}
 
-	void searchToDelete() {
-		String id = textfieldToDeleteId.getText().trim();
+	public void informIdToDelete(String id) {
 		String NOTICE_MESSAGE = " exists, you can delete!";
-		String INFORM_MESSAGE = searchId(id, NOTICE_MESSAGE);
-		textfieldToInformDeletion.setText(INFORM_MESSAGE);   
+		String INFORM_MESSAGE = checkInformMessage(id, NOTICE_MESSAGE);
+		textfieldToInformDeletion.setText(INFORM_MESSAGE);  
 	}
 
-	void searchToUpdate() {
-		String id = textfieldToUpdateId.getText().trim();
+	public void informIdToUpdate(String id) {
 		String NOTICE_MESSAGE = " exists, please update phone number!";
-		String INFORM_MESSAGE = searchId(id, NOTICE_MESSAGE);
+		String INFORM_MESSAGE = checkInformMessage(id, NOTICE_MESSAGE);
 		textfieldToInformUpdate.setText(INFORM_MESSAGE);
 	}
 
-	String searchId(String id, String message) {
-		String update = "";
+	String checkInformMessage(String id, String NOTICE_MESSAGE) {
+		if (searchId(id) == true)
+			return "ID "+ id + NOTICE_MESSAGE;
+		else
+			return "ID "+id+" not exists"; 
+	}
+
+	boolean searchId(String id) {
 		try {
 			String sql = "select name from student where id='" + id + "' ";
 			PreparedStatement sqlStatement = dbConnection.prepareStatement(sql);
 			ResultSet resultset = sqlStatement.executeQuery(); 
-			update = "ID "+id+" not exists";
 			while(resultset.next())
 				if (resultset.getString("name") != null)
-					update= "ID "+ id + message;
+					return true;
+			return false;
 		}
-		catch(Exception e) {
+		catch (Exception e) {
+			return false;
 		}
-		return update;
 	}
 
-	void deleteStudentById() {
+	boolean deleteStudentById(String id) {
 		try {
-			String id = textfieldToDeleteId.getText().trim();
 			if (id == null || id.length() == 0)
-				return ;
+				return false;
 			sqlStatement.executeUpdate("delete from student where id='" + id + "'");
-			System.out.println("student data delete success");   
+			System.out.println("student data delete success");
+			return true;
 		}
-		catch(Exception e) {
+		catch (Exception e) {
+			return false;
 		}
 	}
 
-	void updateStudentById(String id,String newPhone) {
+	boolean updateStudentById(String id, String newPhone) {
 		try {
-			String sql = "update student set phone = ? where id ='" + id + "'";
-			PreparedStatement sqlStatement = dbConnection.prepareStatement(sql);
-			sqlStatement.setString(1, newPhone);
-			sqlStatement.executeUpdate();
-			System.out.println("student data update success");
+			if(id != "") {
+				String sql = "update student set phone = ? where id ='" + id + "'";
+				PreparedStatement sqlStatement = dbConnection.prepareStatement(sql);
+				sqlStatement.setString(1, newPhone);
+				sqlStatement.executeUpdate();
+				System.out.println("student data update success");
+				return true;
+			}
+			else
+				return false;
 		}
-		catch(Exception e) {
+		catch (Exception e) {
+			return false;
 		}
 	}
 
-	void viewStudentById(String id) {
+	boolean viewStudentById(String id) {
 		String info[] = new String[4];
 		int lastIndex = studentListTable.getRowCount();
 		DefaultTableModel listmodel = (DefaultTableModel) studentListTable.getModel();
 		try {
-			String sql = "select * from student where id='" + id + "'";
-			PreparedStatement sqlStatement = dbConnection.prepareStatement(sql);
-			ResultSet resultset = sqlStatement.executeQuery(); 
-			while(resultset.next()) {
-				info[0] = resultset.getString("id");
-				info[1] = resultset.getString("name");
-				info[2] = resultset.getString("department");
-				info[3] = resultset.getString("phone");
+			if (searchId(id)) {
+				String sql = "select * from student where id='" + id + "'";
+				PreparedStatement sqlStatement = dbConnection.prepareStatement(sql);
+				ResultSet resultset = sqlStatement.executeQuery(); 
+				while(resultset.next()) {
+					info[0] = resultset.getString("id");
+					info[1] = resultset.getString("name");
+					info[2] = resultset.getString("department");
+					info[3] = resultset.getString("phone");
 
-				listmodel.addRow(info);
+					listmodel.addRow(info);
+				}
+				System.out.println("student data view success");
+				return true;
 			}
-			System.out.println("student data view success");
+			else
+				return false;
 		}
-		catch(Exception e) {
+		catch (Exception e) {
+			return false;
 		}   
-		System.out.println(studentListTable.getValueAt(lastIndex, 0));
 	}
 
-	void updateProfessorPassword(String newPassword) {   
+	boolean updateProfessorPassword(String newPassword) {   
 		try {
-			String sql = "update login set password = ? where id = 'professor'";
-			PreparedStatement sqlStatement = dbConnection.prepareStatement(sql);
-			sqlStatement.setString(1, newPassword);
-			sqlStatement.executeUpdate();
-			System.out.println("professor password updated");
+			if (newPassword != "") {
+				String sql = "update login set password = ? where id = 'professor'";
+				PreparedStatement sqlStatement = dbConnection.prepareStatement(sql);
+				sqlStatement.setString(1, newPassword);
+				sqlStatement.executeUpdate();
+				System.out.println("professor password updated");
+				return true;
+			}
+			else
+				return false;
 		}
-		catch(Exception e) {
+		catch (Exception e) {
+			return false;
 		}
 	}   
 
